@@ -13,7 +13,7 @@ export default function HomeScreen() {
             source={require('./../assets/images/college_logo.jpeg')}
             className="w-40 h-40"
             resizeMode="contain"
-          />
+          />dfdsfdsfdfd
 
           {/* Student and Admin Buttons */}
           <View className="mt-8 space-y-10">
