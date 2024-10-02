@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import axios from 'axios'; // Ensure axios is imported
 
 export default function Login() {
   const router = useRouter();
@@ -10,18 +11,18 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Handle login button press
   const handleLogin = async () => {
     try {
-      // Sending a GET request to the backend login API using axios
-      const response = await axios.get('http://localhost:5000/login', {
-        params: { username, password }, // Pass username and password as query parameters
+      console.log('Sending login request to backend...');
+
+      const response = await axios.post('http://localhost:5000/login', {
+        username,
+        password
       });
-
+  
       const result = response.data;
-
-      console.log(result);
-
+      console.log('Server Response:', result);
+  
       if (result.success) {
         Alert.alert('Login Successful', 'Welcome to the dashboard!');
         // Navigate to the dashboard or desired screen after login
@@ -31,9 +32,10 @@ export default function Login() {
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
       }
     } catch (error) {
+      console.log('Login Error:', error);
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
-  };
+  };  
 
   return (
     <View className="flex-1 items-center justify-center bg-gray-150 p-4">
