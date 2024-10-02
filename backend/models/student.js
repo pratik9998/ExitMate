@@ -12,7 +12,7 @@ const student = new Schema(
       required: true,
     },
     profile : {
-        type : Buffer
+      type : Buffer
     }
   },
   { timestamps: true }

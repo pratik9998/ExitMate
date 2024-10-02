@@ -17,7 +17,7 @@ app.listen(5000, function () {
   console.log("Listening on port 5000");
 });
 
-app.get('/signup',async (req,res)=>{
+app.post('/signup',async (req,res)=>{
      let username = req.body.username;
      const password = req.body.password;
      const confirm_password = req.body.confirm_password;
@@ -39,7 +39,7 @@ app.get('/signup',async (req,res)=>{
       }
 })
 
-app.get('/login',async(req,res)=>{
+app.post('/login',async(req,res)=>{
   let {username,password } = req.body;
   username = username.trim();
   if(!username){res.send("Username is required");return;}
