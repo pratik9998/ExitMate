@@ -13,16 +13,14 @@ export default function Login() {
   // Handle login button press
   const handleLogin = async () => {
     try {
-      // Sending a POST request to the backend login API
-      const response = await fetch('http://localhost:5000/login', { // Added `http://` prefix
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }), // Send username and password in request body
+      // Sending a GET request to the backend login API using axios
+      const response = await axios.get('http://localhost:5000/login', {
+        params: { username, password }, // Pass username and password as query parameters
       });
 
-      const result = await response.json();
+      const result = response.data;
 
-      console.log(result)
+      console.log(result);
 
       if (result.success) {
         Alert.alert('Login Successful', 'Welcome to the dashboard!');
