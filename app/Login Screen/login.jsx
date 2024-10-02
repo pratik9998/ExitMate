@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-
+import axios from 'axios';
 export default function Login() {
   const router = useRouter();
   const { userType } = useLocalSearchParams(); // Retrieve userType from query parameters
@@ -10,17 +10,14 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  // Handle login button press
+  console.log(username)
   const handleLogin = async () => {
     try {
       // Sending a GET request to the backend login API using axios
-      const response = await axios.get('http://localhost:5000/login', {
+      const response = await axios.post("http://192.168.97.134:5000/login", {
         params: { username, password }, // Pass username and password as query parameters
       });
-
       const result = response.data;
-
-      console.log(result);
 
       if (result.success) {
         Alert.alert('Login Successful', 'Welcome to the dashboard!');

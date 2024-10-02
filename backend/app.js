@@ -7,6 +7,8 @@ require("./")
 const student = require("./models/student");
 const bcrypt = require("bcrypt");
 const app = express();
+const cors = require("cors");
+app.use(cors());
 // sending request to postman or any other may be gives error we need to express .json to convert into json file
 app.use(express.json());
 // this function down runs everytime request is made as path is not mentioned
@@ -40,13 +42,13 @@ app.post('/signup',async (req,res)=>{
 })
 
 app.post('/login',async(req,res)=>{
-  let {username,password } = req.body;
+  let {username,password } = req.body.params;
   username = username.trim();
-  if(!username){res.send("Username is required");return;}
-  if(!password){ res.send("Password is required");return;}
+  if(!username){res.send({success:false,message:"Username is required"});return;}
+  if(!password){ res.send({success:false,message:"Password is required"});return;}
   const user =await  student.findOne({username});
   if(!user){
-    res.send("No such user exist");
+    res.send({success:false,message:"No such user exist"});
     return ;
   }
   const auth = await bcrypt.compare(password, user.password);
@@ -60,6 +62,6 @@ app.post('/login',async(req,res)=>{
     return ;
   }
   else{
-    res.send("Wrong Password");
+    res.send({success:false,message:"Wrong Password"});
   }
 })
