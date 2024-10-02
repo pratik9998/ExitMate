@@ -22,6 +22,13 @@ export default function SignUp() {
         secureTextEntry
         className="w-full p-3 mb-6 border border-gray-300 rounded-lg"
       />
+      
+      {/* for confirm Password */}
+      <TextInput
+        placeholder="Confirm Password"
+        secureTextEntry
+        className="w-full p-3 mb-6 border border-gray-300 rounded-lg"
+      />
 
       {/* Sign Up Button */}
       <TouchableOpacity className="bg-green-600 py-3 px-10 rounded-full mb-4">

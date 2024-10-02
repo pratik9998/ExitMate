@@ -19,16 +19,16 @@ export default function HomeScreen() {
           <View className="mt-8 space-y-10">
             <TouchableOpacity>
               <Link
-                href="/Login Screen/login"
+                href={{ pathname: "/Login Screen/login", params: { userType: 'Student' } }}
                 className="bg-white text-blue-700 py-2 px-6 rounded-full shadow-lg"
               >
                 <Text className="text-blue-700 text-xl font-semibold">Student</Text>
               </Link>
             </TouchableOpacity>
-            
+
             <TouchableOpacity>
               <Link
-                href="/Login Screen/login"
+                href={{ pathname: "/Login Screen/login", params: { userType: 'Admin' } }}
                 className="bg-white text-blue-700 py-2 px-6 rounded-full shadow-lg"
               >
                 <Text className="text-blue-700 text-xl font-semibold">Admin</Text>
