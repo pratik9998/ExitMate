@@ -11,10 +11,13 @@ const cors = require("cors");
 app.use(cors());
 // sending request to postman or any other may be gives error we need to express .json to convert into json file
 app.use(express.json());
+
+
 // this function down runs everytime request is made as path is not mentioned
 app.use((req,res,next)=>{
   next();
 })
+
 app.listen(5000, function () {
   console.log("Listening on port 5000");
 });

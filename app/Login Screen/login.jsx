@@ -28,9 +28,10 @@ export default function Login() {
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
       }
     } catch (error) {
+      console.log('Login Error:', error);
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
-  };
+  };  
 
   return (
     <View className="flex-1 items-center justify-center bg-gray-150 p-4">
