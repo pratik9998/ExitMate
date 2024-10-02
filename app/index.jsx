@@ -20,7 +20,7 @@ export default function HomeScreen() {
             <TouchableOpacity>
               <Link
                 href={{ pathname: "/Login Screen/login", params: { userType: 'Student' } }}
-                className="bg-white text-blue-700 py-2 px-6 rounded-full shadow-lg"
+                className="bg-white text-blue-700 py-2 px-6 text-center rounded-full shadow-lg"
               >
                 <Text className="text-blue-700 text-xl font-semibold">Student</Text>
               </Link>
@@ -29,7 +29,7 @@ export default function HomeScreen() {
             <TouchableOpacity>
               <Link
                 href={{ pathname: "/Login Screen/login", params: { userType: 'Admin' } }}
-                className="bg-white text-blue-700 py-2 px-6 rounded-full shadow-lg"
+                className="bg-white text-blue-700 py-2 px-6 text-center rounded-full shadow-lg"
               >
                 <Text className="text-blue-700 text-xl font-semibold">Admin</Text>
               </Link>

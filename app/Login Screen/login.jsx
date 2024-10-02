@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 
 export default function Login() {
@@ -14,7 +14,7 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       // Sending a POST request to the backend login API
-      const response = await fetch('localhost:5000/login', {
+      const response = await fetch('http://localhost:5000/login', { // Added `http://` prefix
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }), // Send username and password in request body
@@ -22,10 +22,12 @@ export default function Login() {
 
       const result = await response.json();
 
+      console.log(result)
+
       if (result.success) {
         Alert.alert('Login Successful', 'Welcome to the dashboard!');
         // Navigate to the dashboard or desired screen after login
-        router.push('/Home');
+        // router.push('/Home');
       } else {
         // Display an alert based on the message returned by the backend
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
