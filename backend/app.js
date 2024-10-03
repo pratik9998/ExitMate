@@ -32,6 +32,7 @@ app.post('/create',async(req,res)=>{
      st.save(); 
 })
 app.post('/signup',async (req,res)=>{
+      console.log("HIIH");
      let username = req.body.username;
      const password = req.body.password;
      const confirm_password = req.body.confirmPassword;
