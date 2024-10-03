@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 
-export default function HomeScreen() {
+const SplashScreen = () => {
+  const router = useRouter();
+
   return (
     <SafeAreaView className="flex-1 bg-gray-900">
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
@@ -17,22 +19,16 @@ export default function HomeScreen() {
 
           {/* Student and Admin Buttons */}
           <View className="mt-8 space-y-10">
-            <TouchableOpacity>
-              <Link
-                href={{ pathname: "/Login Screen/login", params: { userType: 'Student' } }}
-                className="bg-white text-blue-700 py-2 px-6 text-center rounded-full shadow-lg"
-              >
-                <Text className="text-blue-700 text-xl font-semibold">Student</Text>
-              </Link>
+            <TouchableOpacity onPress={() => router.push({ pathname: "./Login Screen/login", params: { userType: 'Student' } })}>
+              <View className="bg-white py-2 px-6 rounded-full shadow-lg">
+                <Text className="text-blue-700 text-xl font-semibold text-center">Student</Text>
+              </View>
             </TouchableOpacity>
 
-            <TouchableOpacity>
-              <Link
-                href={{ pathname: "/Login Screen/login", params: { userType: 'Admin' } }}
-                className="bg-white text-blue-700 py-2 px-6 text-center rounded-full shadow-lg"
-              >
-                <Text className="text-blue-700 text-xl font-semibold">Admin</Text>
-              </Link>
+            <TouchableOpacity onPress={() => router.push({ pathname: "./Login Screen/login", params: { userType: 'Admin' } })}>
+              <View className="bg-white py-2 px-6 rounded-full shadow-lg">
+                <Text className="text-blue-700 text-xl font-semibold text-center">Admin</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -49,3 +45,5 @@ export default function HomeScreen() {
     </SafeAreaView>
   );
 }
+
+export default SplashScreen;

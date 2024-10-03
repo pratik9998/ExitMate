@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
 
-export default function Login() {
+const Login = () => {
   const router = useRouter();
   const { userType } = useLocalSearchParams(); // Retrieve userType from query parameters
 
@@ -17,15 +17,15 @@ export default function Login() {
   const handleLogin = async () => {
     try {
       // Sending a GET request to the backend login API using axios
-      const response = await axios.post("http://192.168.97.134:5000/login", {
+      const response = await axios.post("http://192.168.14.111:5000/login", {
         params: { username, password }, // Pass username and password as query parameters
       });
       const result = response.data;
 
       if (result.success) {
-        Alert.alert('Login Successful', 'Welcome to the dashboard!');
+        Alert.alert('Login Successful', 'Welcome to ExitMate!');
         // Navigate to the dashboard or desired screen after login
-        // router.push('/Home');
+        router.replace('/Home Screen');
       } else {
         // Display an alert based on the message returned by the backend
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
@@ -86,3 +86,5 @@ export default function Login() {
     </View>
   );
 }
+
+export default Login;
