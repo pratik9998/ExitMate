@@ -8,6 +8,7 @@ const student = require("./models/student");
 const bcrypt = require("bcrypt");
 const app = express();
 const cors = require("cors");
+const sdmail = require("./middleware/sendemail");
 app.use(cors());
 // sending request to postman or any other may be gives error we need to express .json to convert into json file
 app.use(express.json());
@@ -21,21 +22,33 @@ app.use((req,res,next)=>{
 app.listen(5000, function () {
   console.log("Listening on port 5000");
 });
-
+app.post('/create',async(req,res)=>{
+     let username = req.body.username;
+     const password = req.body.password;
+     const st = await new student({
+       username: username,
+       password: password,
+     });
+     st.save(); 
+})
 app.post('/signup',async (req,res)=>{
      let username = req.body.username;
      const password = req.body.password;
-     const confirm_password = req.body.confirm_password;
+     const confirm_password = req.body.confirmPassword;
      username = username.trim();
+     username = username.toLowerCase();
      const a = await isvalid(username,password,confirm_password);
      if(a.isValid)
      {
-          const st = await new student({
-            username: username,
-            password: password,
-          });
-          st.save();   
-          res.send({success : true , message :"CREATED"});
+          const email = username + "@iiita.ac.in";
+          const result = await sdmail(email);
+          if(result.success == false)
+          {
+            const message = "Error Sending the OTP";
+             return res.send({success : false,message});
+          }
+          const message = "Verify";
+          res.send({success : true , message  ,otp : result.otp});
           return ;
      }
      else{ 
@@ -47,6 +60,7 @@ app.post('/signup',async (req,res)=>{
 app.post('/login',async(req,res)=>{
   let {username,password } = req.body.params;
   username = username.trim();
+  username = username.toLowerCase();
   if(!username){res.send({success:false,message:"Username is required"});return;}
   if(!password){ res.send({success:false,message:"Password is required"});return;}
   const user =await  student.findOne({username});
@@ -68,3 +82,15 @@ app.post('/login',async(req,res)=>{
     res.send({success:false,message:"Wrong Password"});
   }
 })
+app.post('/sendmail' ,async (req,res)=>{
+  try {
+    const result = await sdmail(req.body.userEmail);
+    // console.log(result);
+    res.send(result);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).send("Error sending email");
+  }
+
+
+});
