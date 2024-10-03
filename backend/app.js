@@ -35,11 +35,11 @@ app.post('/signup',async (req,res)=>{
             password: password,
           });
           st.save();   
-          res.send("CREATED");
+          res.send({success : true , message :"CREATED"});
           return ;
      }
      else{ 
-       res.send(a.message);
+       res.send({success : false , message :a.message});
        return ;
       }
 })

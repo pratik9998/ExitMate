@@ -21,8 +21,9 @@ export default function SignUp() {
 
       // Sending a POST request to the backend sign-up API using axios
       const response = await axios.post("http://192.168.97.134:5000/signup", {
-        username, 
+        username,
         password,
+        confirmPassword,
       });
       const result = response.data;
 
