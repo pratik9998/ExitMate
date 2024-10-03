@@ -2,6 +2,7 @@ import React,{ useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity ,Alert} from 'react-native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
 
 export default function SignUp() {
   const router = useRouter();
@@ -10,6 +11,7 @@ export default function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   // Handle Sign Up
   const handleSignUp = async () => {
@@ -53,14 +55,22 @@ export default function SignUp() {
         className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
       />
 
-      {/* Password Input Field */}
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword} // Update password state as user types
-        className="w-full p-3 mb-6 border border-gray-300 rounded-lg"
-      />
+      {/* Password Input Field with Eye Icon */}
+      <View className="w-full flex-row items-center border border-gray-300 rounded-lg mb-6">
+        <TextInput
+          placeholder="Password"
+          secureTextEntry={!showPassword} // Toggle visibility based on showPassword state
+          value={password}
+          onChangeText={setPassword} // Update password state as user types
+          className="flex-1 p-3"
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="pr-4">
+          {/* Wrapping Icon inside Text to avoid the error */}
+          <Text>
+            <Icon name={showPassword ? 'eye' : 'eye-off'} size={24} color="gray" /> {/* Toggle between eye and eye-off icons */}
+          </Text>
+        </TouchableOpacity>
+      </View>
       
       {/* for confirm Password */}
       <TextInput

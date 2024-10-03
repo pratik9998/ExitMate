@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert} from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
+
 export default function Login() {
   const router = useRouter();
   const { userType } = useLocalSearchParams(); // Retrieve userType from query parameters
@@ -9,6 +11,7 @@ export default function Login() {
   // State variables for storing username and password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
   console.log(username)
   const handleLogin = async () => {
@@ -46,14 +49,22 @@ export default function Login() {
         className="w-full p-3 mb-4 border border-gray-300 rounded-lg"
       />
 
-      {/* Password Input Field */}
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword} // Update password state as user types
-        className="w-full p-3 mb-6 border border-gray-300 rounded-lg"
-      />
+      {/* Password Input Field with Eye Icon */}
+      <View className="w-full flex-row items-center border border-gray-300 rounded-lg mb-6">
+        <TextInput
+          placeholder="Password"
+          secureTextEntry={!showPassword} // Toggle visibility based on showPassword state
+          value={password}
+          onChangeText={setPassword} // Update password state as user types
+          className="flex-1 p-3"
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="pr-4">
+          {/* Wrapping Icon inside Text to avoid the error */}
+          <Text>
+            <Icon name={showPassword ? 'eye' : 'eye-off'} size={24} color="gray" /> {/* Toggle between eye and eye-off icons */}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
        {/* Login Button */}
        <TouchableOpacity className="bg-blue-600 py-3 px-10 rounded-full mb-4" onPress={handleLogin}>
