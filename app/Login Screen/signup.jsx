@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
 
-export default function SignUp() {
+const SignUp = () => {
   const router = useRouter();
 
   // State variables for storing username and password
@@ -22,7 +22,7 @@ export default function SignUp() {
       }
 
       // Sending a POST request to the backend sign-up API using axios
-      const response = await axios.post("http://192.168.97.134:5000/signup", {
+      const response = await axios.post("http://192.168.14.111:5000/signup", {
         username,
         password,
         confirmPassword,
@@ -33,6 +33,7 @@ export default function SignUp() {
         Alert.alert('Sign Up Successful', 'Your account has been created!');
         // Navigate to the login page or desired screen after sign-up
         router.back();
+        router.replace('/Home Screen'); // Replace the current screen with the home screen
       } else {
         // Display an alert based on the message returned by the backend
         Alert.alert('Sign Up Failed', result.message || 'Could not create account');
@@ -100,3 +101,6 @@ export default function SignUp() {
     </View>
   );
 }
+
+
+export default SignUp;

@@ -1,11 +1,12 @@
-// app/_layout.jsx
-import { Stack } from 'expo-router';
+import { Stack, Slot } from 'expo-router';
 
-export default function RootLayout() {
+const RootLayout = () => {
   return (
     <Stack>
-      {/* You don't need to reference _layout.jsx explicitly */}
       <Stack.Screen name="Login Screen" options={{ headerShown: false }} />
+      <Stack.Screen name="Home Screen" options={{ headerShown: false }} />
     </Stack>
   );
-}
+};
+
+export default RootLayout;
