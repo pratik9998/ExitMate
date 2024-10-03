@@ -25,7 +25,7 @@ const SignUp = () => {
       const response = await axios.post("http://192.168.14.111:5000/signup", {
         username,
         password,
-        confirmPassword,
+        confirmPassword
       });
       const result = response.data;
 

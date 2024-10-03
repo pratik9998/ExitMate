@@ -13,7 +13,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false); // State for password visibility
 
-  console.log(username)
   const handleLogin = async () => {
     try {
       // Sending a GET request to the backend login API using axios
