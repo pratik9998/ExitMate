@@ -1,6 +1,7 @@
 import React,{ useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity ,Alert} from 'react-native';
 import { useRouter } from 'expo-router';
+import axios from 'axios';
 
 export default function SignUp() {
   const router = useRouter();
@@ -9,6 +10,35 @@ export default function SignUp() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
+
+  // Handle Sign Up
+  const handleSignUp = async () => {
+    try {
+      if (password !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match!');
+        return;
+      }
+
+      // Sending a POST request to the backend sign-up API using axios
+      const response = await axios.post("http://192.168.97.134:5000/signup", {
+        username, 
+        password,
+      });
+      const result = response.data;
+
+      if (result.success) {
+        Alert.alert('Sign Up Successful', 'Your account has been created!');
+        // Navigate to the login page or desired screen after sign-up
+        router.back();
+      } else {
+        // Display an alert based on the message returned by the backend
+        Alert.alert('Sign Up Failed', result.message || 'Could not create account');
+      }
+    } catch (error) {
+      console.log('Sign Up Error:', error);
+      Alert.alert('Error', 'Something went wrong. Please try again.');
+    }
+  };
 
   return (
     <View className="flex-1 items-center justify-center bg-gray-150 p-4">
@@ -42,7 +72,7 @@ export default function SignUp() {
       />
 
       {/* Sign Up Button */}
-      <TouchableOpacity className="bg-green-600 py-3 px-10 rounded-full mb-4">
+      <TouchableOpacity className="bg-green-600 py-3 px-10 rounded-full mb-4" onPress={handleSignUp}>
         <Text className="text-white text-lg font-semibold">Sign Up</Text>
       </TouchableOpacity>
 
