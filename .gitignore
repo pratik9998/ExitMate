@@ -1,6 +1,7 @@
 node_modules/
 .expo/
 backend/node_modules/
+backend/.env
 dist/
 npm-debug.*
 *.jks
