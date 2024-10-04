@@ -22,6 +22,7 @@ app.use((req,res,next)=>{
 app.listen(5000, function () {
   console.log("Listening on port 5000");
 });
+
 app.post('/create',async(req,res)=>{
      let username = req.body.username;
      const password = req.body.password;
@@ -30,9 +31,11 @@ app.post('/create',async(req,res)=>{
        password: password,
      });
      st.save(); 
+    // Send a success response
+    res.status(200).send({ message: 'User created successfully!' });
 })
+
 app.post('/signup',async (req,res)=>{
-      console.log("HIIH");
      let username = req.body.username;
      const password = req.body.password;
      const confirm_password = req.body.confirmPassword;

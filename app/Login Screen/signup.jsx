@@ -22,7 +22,7 @@ const SignUp = () => {
       }
 
       // Sending a POST request to the backend sign-up API using axios
-      const response = await axios.post("http://192.168.1.134:5000/signup", {
+      const response = await axios.post("http://192.168.14.111:5000/signup", {
         username,
         password,
         confirmPassword,
@@ -30,12 +30,19 @@ const SignUp = () => {
       const result = response.data;
 
       if (result.success) {
-        Alert.alert('Sign Up Successful', 'Your account has been created!');
-        // Navigate to the login page or desired screen after sign-up
-        router.back();
-        router.replace('/Home Screen'); // Replace the current screen with the home screen
-      } else {
-        // Display an alert based on the message returned by the backend
+        const correctotp = result.otp; // Retrieve the correct OTP from backend response
+
+        // Navigate to the OTP verification page and pass the OTP as a parameter
+        router.push({
+          pathname: './verifysignupotp',
+          params: { correctotp : correctotp,
+              username : username,
+              password : password,
+              confirmpassword : confirmPassword
+           },
+        });
+
+      }else{
         Alert.alert('Sign Up Failed', result.message || 'Could not create account');
       }
     } catch (error) {
