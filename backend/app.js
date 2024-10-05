@@ -86,8 +86,10 @@ app.post('/login',async(req,res)=>{
     res.send({success:false,message:"Wrong Password"});
   }
 })
+
 app.post('/sendmail' ,async (req,res)=>{
   try {
+    console.log(req.body.userEmail)
     const result = await sdmail(req.body.userEmail);
     // console.log(result);
     res.send(result);
@@ -95,6 +97,4 @@ app.post('/sendmail' ,async (req,res)=>{
     console.error("Error sending email:", error);
     res.status(500).send("Error sending email");
   }
-
-
 });

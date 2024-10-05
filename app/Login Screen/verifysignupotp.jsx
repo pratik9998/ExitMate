@@ -3,22 +3,19 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 
-const verifySignUpOTP = () => {
+const VerifySignUpOtp = () => {
   const [otp, setOtp] = useState(''); // OTP input state
 
   const router = useRouter();
-  const { correctotp, username, password, confirmpassword } = useLocalSearchParams();
+  const { correctotp, username, password } = useLocalSearchParams();
 
   // Handle OTP verification
   const handleVerify = async () => {
-    console.log(otp)
-    console.log(correctotp)
-
     if (otp === correctotp) {
       try {
         // Make a POST request to the backend to create the user
-        const response = await axios.post('http://192.168.14.111:5000/create', {
-          username: username, 
+        const response = await axios.post('http://192.168.54.111:5000/create', {
+          username: username,
           password: password,
         });
 
@@ -38,30 +35,32 @@ const verifySignUpOTP = () => {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-white">
-      {/* Heading */}
-      <Text className="text-3xl font-bold mb-8">Verify OTP</Text>
+    <View className="flex-1 justify-center items-center bg-gray-100 p-4">
+      {/* Card Container */}
+      <View className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg justify-center items-center">
+        {/* Heading */}
+        <Text className="text-3xl font-bold text-center mb-8">Verify OTP</Text>
 
-      {/* OTP Input Field */}
-      <TextInput
-        placeholder="Enter 6-digit OTP"
-        value={otp}
-        onChangeText={setOtp} // Update OTP state
-        keyboardType="numeric"
-        minLength={6}
-        maxLength={6} // Set max length for OTP
-        className="w-3/4 p-3 mb-6 border border-gray-300 rounded-lg text-center"
-      />
+        {/* OTP Input Field */}
+        <TextInput
+          placeholder="Enter 6-digit OTP"
+          value={otp}
+          onChangeText={setOtp} // Update OTP state
+          keyboardType="numeric"
+          className="border-2 border-gray-300 rounded-lg p-3 mb-6 w-full text-center"
+          maxLength={6} // Set max length for OTP
+        />
 
-      {/* Verify Button */}
-      <TouchableOpacity
-        onPress={handleVerify}
-        className="bg-green-600 py-3 px-10 rounded-full"
-      >
-        <Text className="text-white text-lg font-semibold">Verify</Text>
-      </TouchableOpacity>
+        {/* Verify Button */}
+        <TouchableOpacity
+          onPress={handleVerify}
+          className="bg-green-600 py-3 px-10 rounded-full"
+        >
+          <Text className="text-white text-lg font-semibold">Verify</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
-export default verifySignUpOTP;
+export default VerifySignUpOtp;
