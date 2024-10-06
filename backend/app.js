@@ -26,6 +26,8 @@ app.listen(5000, function () {
 app.post('/create',async(req,res)=>{
      let username = req.body.username;
      const password = req.body.password;
+     username = username.trim();
+     username = username.toLowerCase();     
      const st = await new student({
        username: username,
        password: password,
@@ -98,3 +100,23 @@ app.post('/sendmail' ,async (req,res)=>{
     res.status(500).send("Error sending email");
   }
 });
+app.post("/changepassword",(req,res)=>{
+  try{
+    let username = req.body.username;
+    const password = req.body.password;
+    username=username.trim();
+    username=username.toLowerCase();
+     let user = student.deleteMany({ username });
+    let st = new student({
+      username : username,
+      password : password
+    })
+    st.save();
+    res.send({success : true});
+  }catch(err)
+  {
+    console.log(err);
+    return res.send({success : false});
+  }
+
+}); 
