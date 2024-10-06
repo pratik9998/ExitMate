@@ -36,7 +36,7 @@ const sdmail = async (email) => {
 
       let otp = Math.floor(100000 + Math.random() * 900000).toString();
       const mailOptions = {
-        from: "Nirbhay Paliwal <np621522@gmail.com>",
+        from: "EXITMATE <np621522@gmail.com>",
         to: userEmail,
         subject: "Verification Code",
         text: "Your 6 Digit Code for verification is " + otp,

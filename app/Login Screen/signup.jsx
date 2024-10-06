@@ -22,7 +22,7 @@ const SignUp = () => {
       }
 
       // Sending a POST request to the backend sign-up API using axios
-      const response = await axios.post("http://192.168.54.111:5000/signup", {
+      const response = await axios.post("http://192.168.1.134:5000/signup", {
         username,
         password,
         confirmPassword,

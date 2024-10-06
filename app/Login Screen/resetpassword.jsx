@@ -25,7 +25,7 @@ const ResetPasswordScreen = () => {
       const userEmail = `${cleanedUsername}@iiita.ac.in`; // Construct the email address
 
       // Sending the reset password request with userEmail in the body
-      const response = await axios.post("http://192.168.54.111:5000/sendmail", {
+      const response = await axios.post("http://192.168.1.134:5000/sendmail", {
         userEmail, // Send as JSON in the request body
       });
 

@@ -13,9 +13,12 @@ const VerifyResetPasswordOtp = () => {
     if (otp === correctOtp) {
       try {
         // Sending request to change the password using username and newPassword
-        const response = await axios.post("http://192.168.54.111:5000/changepassword", {
-          params: { username, newPassword },
-        });
+        const response = await axios.post(
+          "http://192.168.1.134:5000/changepassword",
+          {
+            params: { username, newPassword },
+          }
+        );
 
         const result = response.data;
         if (result.success) {

@@ -14,7 +14,8 @@ const VerifySignUpOtp = () => {
     if (otp === correctotp) {
       try {
         // Make a POST request to the backend to create the user
-        const response = await axios.post('http://192.168.54.111:5000/create', {
+  
+        const response = await axios.post("http://192.168.1.134:5000/create", {
           username: username,
           password: password,
         });

@@ -16,7 +16,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       // Sending a GET request to the backend login API using axios
-      const response = await axios.post("http://192.168.54.111:5000/login", {
+      const response = await axios.post("http://192.168.1.134:5000/login", {
         params: { username, password }, // Pass username and password as query parameters
       });
       const result = response.data;
