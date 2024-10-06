@@ -100,6 +100,14 @@ app.post('/sendmail' ,async (req,res)=>{
     res.status(500).send("Error sending email");
   }
 });
+app.post("/checkuserexists",async(req,res)=>{
+  let username = req.body.username;
+  username=username.trim();
+  username=username.toLowerCase();
+  const user = await student.findOne({username});
+  if(user) return res.send({exists : true});
+  else return res.send({exists : false});
+});
 app.post("/changepassword",(req,res)=>{
   try{
     let username = req.body.username;
