@@ -108,17 +108,19 @@ app.post("/checkuserexists",async(req,res)=>{
   if(user) return res.send({exists : true});
   else return res.send({exists : false});
 });
-app.post("/changepassword",(req,res)=>{
+app.post("/changepassword",async (req,res)=>{
   try{
     let username = req.body.username;
     const password = req.body.newPassword;
     username=username.trim();
     username=username.toLowerCase();
-     let user = student.deleteMany({ username });
+    // console.log(username);
+    await student.deleteMany({ username:username });
     let st = new student({
       username : username,
       password : password
     })
+    // console.log(st)
     st.save();
     res.send({success : true});
   }catch(err)
