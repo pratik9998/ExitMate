@@ -15,13 +15,13 @@ const VerifyResetPasswordOtp = () => {
       try {
         // Sending request to change the password using username and newPassword
         const response = await axios.post(`${MY_URL}/changepassword`, {
-          params: { username, newPassword },
+          username, newPassword,
         });
 
         const result = response.data;
-        if (result.success) {
+        if (result.success){
           Alert.alert('Success', 'Password changed successfully.');
-          router.replace('/login'); // Navigate to login screen after successful password change
+          router.replace('./login'); // Navigate to login screen after successful password change
         } else {
           Alert.alert('Error', 'Failed to change password.');
         }
