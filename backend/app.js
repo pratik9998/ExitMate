@@ -111,7 +111,7 @@ app.post("/checkuserexists",async(req,res)=>{
 app.post("/changepassword",(req,res)=>{
   try{
     let username = req.body.username;
-    const password = req.body.password;
+    const password = req.body.newPassword;
     username=username.trim();
     username=username.toLowerCase();
      let user = student.deleteMany({ username });

@@ -24,31 +24,42 @@ const ResetPasswordScreen = () => {
     try {
       setLoading(true); // Start loading spinner
 
-      // Create the email address based on the username
-      const cleanedUsername = username.trim().toLowerCase(); // Clean up the username
-      const userEmail = `${cleanedUsername}@iiita.ac.in`; // Construct the email address
-
       // Sending the reset password request with userEmail in the body
-      const response = await axios.post(`${MY_URL}/sendmail`, {
-        userEmail, // Send as JSON in the request body
+      const response2 = await axios.post(`${MY_URL}/checkuserexists`, {
+        username, // Send as JSON in the request body
       });
 
-      const result = response.data;
-      setLoading(false); // Stop loading spinner
+      if(response2.data.exists){
 
-      if (result.success) {
-        Alert.alert('Success', 'An OTP has been sent to your email');
-        // Navigate to the Verify OTP Screen with username, new password, and correct OTP
-        router.push({
-          pathname: './verifyresetpasswordotp',
-          params: {
-            username,
-            newPassword,
-            correctOtp: result.otp, // Pass the OTP received from the server
-          },
+        // Create the email address based on the username
+        const cleanedUsername = username.trim().toLowerCase(); // Clean up the username
+        const userEmail = `${cleanedUsername}@iiita.ac.in`; // Construct the email address
+
+        // Sending the reset password request with userEmail in the body
+        const response = await axios.post(`${MY_URL}/sendmail`, {
+          userEmail, // Send as JSON in the request body
         });
+
+        const result = response.data;
+        setLoading(false); // Stop loading spinner
+
+        if (result.success) {
+          Alert.alert('Success', 'An OTP has been sent to your email');
+          // Navigate to the Verify OTP Screen with username, new password, and correct OTP
+          router.push({
+            pathname: './verifyresetpasswordotp',
+            params: {
+              username,
+              newPassword,
+              correctOtp: result.otp, // Pass the OTP received from the server
+            },
+          });
+        } else {
+          Alert.alert('Error', 'Failed to send OTP. Please try again.');
+        }
       } else {
-        Alert.alert('Error', 'Failed to send OTP. Please try again.');
+        setLoading(false); // Stop loading spinner
+        Alert.alert('Error', 'User does not exist. Please check your username.');
       }
     } catch (error) {
       setLoading(false); // Stop loading spinner in case of error
