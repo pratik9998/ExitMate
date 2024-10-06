@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
+import { MY_URL } from "@env";
 
 const VerifySignUpOtp = () => {
   const [otp, setOtp] = useState(''); // OTP input state
@@ -14,7 +15,7 @@ const VerifySignUpOtp = () => {
     if (otp === correctotp) {
       try {
         // Make a POST request to the backend to create the user
-        const response = await axios.post('http://192.168.54.111:5000/create', {
+        const response = await axios.post(`${MY_URL}/create`, {
           username: username,
           password: password,
         });

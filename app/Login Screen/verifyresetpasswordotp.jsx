@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
+import { MY_URL } from "@env";
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const VerifyResetPasswordOtp = () => {
@@ -13,7 +14,7 @@ const VerifyResetPasswordOtp = () => {
     if (otp === correctOtp) {
       try {
         // Sending request to change the password using username and newPassword
-        const response = await axios.post("http://192.168.54.111:5000/changepassword", {
+        const response = await axios.post(`${MY_URL}/changepassword`, {
           params: { username, newPassword },
         });
 
