@@ -2,7 +2,7 @@ node_modules/
 .expo/
 backend/node_modules/
 backend/.env
-app/.env
+app/env.js
 dist/
 npm-debug.*
 *.jks

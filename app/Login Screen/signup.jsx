@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'; // Added ActivityIndicator
 import { useRouter } from 'expo-router';
-import { MY_URL } from "@env";
+import MY_URL from '../env';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
 

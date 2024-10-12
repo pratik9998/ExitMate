@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-import { MY_URL } from "@env"; // Import the environment variable
+import MY_URL from "../env";
 import { useRouter } from 'expo-router'; // Use the Expo Router
 import Icon from 'react-native-vector-icons/Feather'; // Make sure to have this library installed
 

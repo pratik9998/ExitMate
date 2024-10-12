@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
-import { MY_URL } from "@env";
+import MY_URL from '../env';
 
 const VerifySignUpOtp = () => {
   const [otp, setOtp] = useState(''); // OTP input state

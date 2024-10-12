@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
-import { MY_URL } from "@env";
+import  MY_URL from '../env';
 import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
 
 const Login = () => {

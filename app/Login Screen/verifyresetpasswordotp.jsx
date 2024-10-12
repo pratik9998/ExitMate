@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
-import { MY_URL } from "@env";
+import MY_URL from '../env';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const VerifyResetPasswordOtp = () => {
