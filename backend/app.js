@@ -9,10 +9,10 @@ const bcrypt = require("bcrypt");
 const app = express();
 const cors = require("cors");
 const sdmail = require("./middleware/sendemail");
+const outToken = require("./models/outToken");
 app.use(cors());
 // sending request to postman or any other may be gives error we need to express .json to convert into json file
 app.use(express.json());
-
 
 // this function down runs everytime request is made as path is not mentioned
 app.use((req,res,next)=>{
@@ -32,11 +32,40 @@ app.post('/create',async(req,res)=>{
        username: username,
        password: password,
      });
-     st.save(); 
+    st.save(); 
     // Send a success response
     res.status(200).send({ message: 'User created successfully!' });
 })
-
+app.post('/getdata',async(req,res)=>{
+   try{
+    let username = req.body.username;
+    let out = student.findOne({username});
+    let data = (await out.populate("outTokens")).outTokens;
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    let a = [];
+    for(const item of data){
+    
+    }
+    return res.send({ success: true });
+   }catch(err)
+   {
+    console.log(err);
+    return res.send({success : false});
+   }
+})
 app.post('/signup',async (req,res)=>{
      let username = req.body.username;
      const password = req.body.password;
@@ -62,7 +91,48 @@ app.post('/signup',async (req,res)=>{
        return ;
       }
 })
-
+app.post('/outgoingrequest' , async(req,res)=>{
+     try{
+        let username = req.body.username;
+        username = username.trim();
+        username = username.toLowerCase();
+        const out = await new outToken({
+          outDate: await new Date()
+        })
+        out.save();
+        await student.updateOne(
+          { username : username }, // Filter by class ID
+          { $push: { outTokens : out } } // Push new student data into the array
+        );
+        res.send({success:true});
+     }   
+     catch(err)
+     {
+        console.log(err);
+        res.send({success:false , message : "Error sending outgoing request"});
+     }   
+})
+app.post('/incomingrequest',async(req,res)=>{    
+  try{
+      let username = req.body.username;
+    let out =await student.findOne({username});
+    const tokenNumber = out.outTokens[out.outTokens.length - 1];
+    const token = await outToken.findById(tokenNumber);
+    if(token.active==0)
+    {
+      return res.send({success: false , message : "Invalid Request"});
+    }
+    token.inDate = await new Date();
+    token.active = 0;
+    token.save();
+    return res.send({success : true});
+  }
+  catch(err)
+  {
+    console.log(err);
+    return res.send({success : false,message : "Error sending income request"});
+  }
+})
 app.post('/login',async(req,res)=>{
   let {username,password } = req.body.params;
   username = username.trim();
@@ -115,13 +185,10 @@ app.post("/changepassword",async (req,res)=>{
     username=username.trim();
     username=username.toLowerCase();
     // console.log(username);
-    await student.deleteMany({ username:username });
-    let st = new student({
-      username : username,
-      password : password
-    })
+    const user = await student.findOne({ username });
+    user.password = password;
     // console.log(st)
-    st.save();
+    user.save();
     res.send({success : true});
   }catch(err)
   {
