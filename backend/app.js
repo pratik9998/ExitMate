@@ -102,7 +102,8 @@ app.post('/outgoingrequest' , async(req,res)=>{
         out.save();
         await student.updateOne(
           { username : username }, // Filter by class ID
-          { $push: { outTokens : out } } // Push new student data into the array
+          { $push: { outTokens : out } }, // Push new student data into the array
+          { $set :{inHostel : false}}
         );
         res.send({success:true});
      }   
@@ -125,6 +126,10 @@ app.post('/incomingrequest',async(req,res)=>{
     token.inDate = await new Date();
     token.active = 0;
     token.save();
+     await student.updateOne(
+       { username: username }, // Filter by class ID
+       { $set: { inHostel: false } }
+     );
     return res.send({success : true});
   }
   catch(err)
@@ -151,7 +156,7 @@ app.post('/login',async(req,res)=>{
        expiresIn: "1d",
      });
 
-     res.json({ success: true, token });
+     res.json({ success: true, user, token });
     return ;
   }
   else{
