@@ -107,8 +107,10 @@ app.post('/outgoingrequest' , async(req,res)=>{
         out.save();
         await student.updateOne(
           { username : username }, 
-          { $push: { outTokens : out } }, 
-          { $set :{inHostel : false}}
+          { 
+            $push: { outTokens : out } ,
+            $set :{inHostel : false}
+          }, 
         );
         res.send({success:true});
      }   
