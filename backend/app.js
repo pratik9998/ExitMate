@@ -24,7 +24,8 @@ app.listen(5000, function () {
 });
 
 app.post('/create',async(req,res)=>{
-     let username = req.body.username;
+    try{
+         let username = req.body.username;
      const password = req.body.password;
      username = username.trim();
      username = username.toLowerCase();     
@@ -34,7 +35,11 @@ app.post('/create',async(req,res)=>{
      });
     st.save(); 
     // Send a success response
-    res.status(200).send({ message: 'User created successfully!' });
+    res.status(200).send({ message: 'User created successfully!' , user:st});
+    }catch(err)
+    {
+      console.log(err);
+    }
 })
 app.post('/getdata',async(req,res)=>{
    try{
@@ -101,8 +106,8 @@ app.post('/outgoingrequest' , async(req,res)=>{
         })
         out.save();
         await student.updateOne(
-          { username : username }, // Filter by class ID
-          { $push: { outTokens : out } }, // Push new student data into the array
+          { username : username }, 
+          { $push: { outTokens : out } }, 
           { $set :{inHostel : false}}
         );
         res.send({success:true});
@@ -128,7 +133,7 @@ app.post('/incomingrequest',async(req,res)=>{
     token.save();
      await student.updateOne(
        { username: username }, // Filter by class ID
-       { $set: { inHostel: false } }
+       { $set: { inHostel: true } }
      );
     return res.send({success : true});
   }
