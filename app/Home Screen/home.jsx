@@ -1,87 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Location from 'expo-location';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Feather';
 import { useUser } from '../UserContext';
+import  MY_URL from '../env';
 
 const Home = () => {
   const [photo, setPhoto] = useState(null);
   const [location, setLocation] = useState(null);
   const [loadingButton, setLoadingButton] = useState(null);
   const router = useRouter();
-  const { photoUri } = useLocalSearchParams();
 
-  const {user} = useUser(); //from user context
-  console.log(user.inHostel);//now ok
-
-  useEffect(() => {
-    if (photoUri) {
-      setPhoto(photoUri); // Update the photo state if photoUri is present
-      console.log('2. Captured Photo:', photoUri); // Log the captured photo URI
-    }
-  }, [photoUri]); // Dependency array ensures this runs when photoUri changes
+  const {user,setUser} = useUser(); //from user context
+  console.log(user);//now ok
 
   const handleLogout = () => {
-    router.dismiss(); // Clearing the navigation stack back to the root.
+    setUser(null);
+    router.dismiss();
   };
 
   const handleProfile = () => {
-    router.push('/Home Screen/profile'); // Navigate to the profile screen
+    router.push('/Home Screen/profile');
   };
 
   const handleLeaveRequest = async () => {
-    setLoadingButton('leave'); // Set loading state for leave button
-    await getLocation(); // Get the current location
-    // await sendDataToBackend(); // Uncomment to send data to the backend
-    router.push('/Home Screen/camera'); // Navigate to the camera screen
-    setLoadingButton(null); // Reset loading state after navigation
+    setLoadingButton('leave');
+    await getLocation('leave');
   };
-
+  
   const handleArrivingRequest = async () => {
-    setLoadingButton('arriving'); // Set loading state for arriving button
-    await getLocation(); // Get the current location
-    // await sendDataToBackend(); // Uncomment to send data to the backend
-    router.push('/Home Screen/camera'); // Navigate to the camera screen
-    setLoadingButton(null); // Reset loading state after navigation
-  };
+    setLoadingButton('arriving');
+    await getLocation('arrival'); // Assuming this gets the location
+  };  
 
-  const getLocation = async () => {
+  const getLocation = async (reqType) => {
     try {
-      // Request permission to access location
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Location permission not granted');
         return;
       }
-
-      // Get the current location
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords); // Store the location in state
-      console.log('1. Current Location:', location.coords); // Log the location
+      setLocation(location); 
+      router.replace({
+        pathname: '/Home Screen/camera',
+        params: { requestType: reqType, location: JSON.stringify(location) },
+      });
+      setLoadingButton(null);
     } catch (error) {
       console.error("Error getting location:", error);
-    }
-  };
-
-  const sendDataToBackend = async () => {
-    if (!photo || !location) {
-      console.log('Photo or location not available');
-      return;
-    }
-
-    try {
-      const response = await axios.post('https://your-api-endpoint.com/upload', {
-        image: photo, // Send the photo URI
-        location: {
-          latitude: location.latitude,
-          longitude: location.longitude,
-        },
-      });
-      console.log('Data sent to backend:', response.data);
-    } catch (error) {
-      console.error("Error sending data to backend:", error);
     }
   };
 

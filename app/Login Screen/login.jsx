@@ -11,26 +11,23 @@ const Login = () => {
   const { userType } = useLocalSearchParams();
   const { setUser } = useUser();
 
-
-  // State variables for storing username and password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     try {
-      // Sending a GET request to the backend login API using axios
       const response = await axios.post(`${MY_URL}/login`, {
-        params: { username, password }, // Pass username and password as query parameters
+        params: { username, password },
       });
       const result = response.data;
+      console.log(result.user);
 
-      if (result.success) {
+      if(result.success){
         Alert.alert('Login Successful', 'Welcome to ExitMate!');
         setUser(result.user);
         router.replace('/Home Screen');
-      } else {
-        // Display an alert based on the message returned by the backend
+      }else{
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
       }
     } catch (error) {
