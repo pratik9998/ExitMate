@@ -17,7 +17,7 @@ const student = new Schema(
     },
     inHostel :{
         type : Boolean,
-        Default :true,
+        default :true,
     },
     outTokens:[{
        type : mongoose.Schema.Types.ObjectId,

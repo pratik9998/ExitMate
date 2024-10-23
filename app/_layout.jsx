@@ -1,11 +1,14 @@
 import { Stack, Slot } from 'expo-router';
+import { UserProvider } from './UserContext';
 
 const RootLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="Login Screen" options={{ headerShown: false }} />
-      <Stack.Screen name="Home Screen" options={{ headerShown: false }} />
-    </Stack>
+    <UserProvider>
+      <Stack>
+        <Stack.Screen name="Login Screen" options={{ headerShown: false }} />
+        <Stack.Screen name="Home Screen" options={{ headerShown: false }} />
+      </Stack>
+    </UserProvider>
   );
 };
 

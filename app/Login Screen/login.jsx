@@ -3,11 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import  MY_URL from '../env';
-import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
+import Icon from 'react-native-vector-icons/Feather';
+import { useUser } from '../UserContext';
 
 const Login = () => {
   const router = useRouter();
-  const { userType } = useLocalSearchParams(); // Retrieve userType from query parameters
+  const { userType } = useLocalSearchParams();
+  const { setUser } = useUser();
+
 
   // State variables for storing username and password
   const [username, setUsername] = useState('');
@@ -24,7 +27,7 @@ const Login = () => {
 
       if (result.success) {
         Alert.alert('Login Successful', 'Welcome to ExitMate!');
-        // Navigate to the dashboard or desired screen after login
+        setUser(result.user);
         router.replace('/Home Screen');
       } else {
         // Display an alert based on the message returned by the backend
