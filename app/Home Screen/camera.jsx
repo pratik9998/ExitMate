@@ -1,21 +1,26 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import axios from 'axios';
+import { useUser } from '../UserContext';
+import  MY_URL from '../env';
 
 const CameraScreen = () => {
-  const [facing, setFacing] = useState('front'); // Default to 'front'
+  const [facing, setFacing] = useState('front');
   const [permission, requestPermission] = useCameraPermissions();
-  const cameraRef = useRef(null); // Create a reference for the camera
+  const cameraRef = useRef(null);
   const router = useRouter();
+  const { requestType, location } = useLocalSearchParams();
+  const {user} = useUser();
+
+  const parsedLocation = JSON.parse(location);
 
   if (!permission) {
-    // Camera permissions are still loading.
     return <View><Text>Loading camera permissions...</Text></View>;
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
         <Text style={styles.message}>We need your permission to show the camera</Text>
@@ -29,13 +34,35 @@ const CameraScreen = () => {
   const takePhoto = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
-      console.log('Captured Photo:', photo); // Log the captured photo URI
-      //instead of photo.uri, we can use base64 format and pass it to backend
-      //where it is converted to .jpg file
-      router.replace({
-        pathname: '/Home Screen',
-        params: { photoUri: photo.uri }, // Pass the photo URI back to Home
-      });
+      console.log('1.parsed Location : ', parsedLocation);
+      console.log('2.captured photo in camera : ', photo);
+
+      // Determine API endpoint based on requestType
+      const endpoint = requestType === 'leave' ? '/outgoingrequest' : '/incomingrequest';
+
+      try {
+        const response = await axios.post(`${MY_URL}${endpoint}`,{ 
+          username: user.username, 
+          // image: photo.uri, // The photo URI or base64
+          // location: {
+          //   latitude: parsedLocation.coords.latitude,
+          //   longitude: parsedLocation.coords.longitude,
+          // },
+        });
+        
+        const result = response.data;
+        if (result.success) {
+          Alert.alert(`${requestType === 'leave' ? 'Leave' : 'Arriving'} Request Successful`);
+        } else {
+          Alert.alert('Request Error', result.message || `Invalid ${requestType} response`);
+        }
+
+      } catch (error) {
+        console.error(`Error sending ${requestType} request to backend:`, error);
+        Alert.alert('Request Failed', 'There was an issue with your request.');
+      }
+      user.inHostel = !user.inHostel;
+      router.replace('/Home Screen');
     } else {
       console.warn('Camera reference is not set.');
     }
@@ -48,7 +75,7 @@ const CameraScreen = () => {
   return (
     <View style={styles.container}>
       <CameraView
-        ref={cameraRef} // Attach cameraRef to CameraView
+        ref={cameraRef}
         style={styles.camera}
         facing={facing}
       >
