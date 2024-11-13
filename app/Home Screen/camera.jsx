@@ -5,6 +5,23 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import { useUser } from '../UserContext';
 import  MY_URL from '../env';
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return distance;
+}
+
+const targetLat = 25.4322185; 
+const targetLon = 81.7707415; 
 
 const CameraScreen = () => {
   const [facing, setFacing] = useState('front');
@@ -36,7 +53,15 @@ const CameraScreen = () => {
       const photo = await cameraRef.current.takePictureAsync();
       console.log('1.parsed Location : ', parsedLocation);
       console.log('2.captured photo in camera : ', photo);
-
+      const distance = getDistanceFromLatLonInKm(
+        parsedLocation.longitude,
+        parsedLocation.latitude,
+        targetLat,
+        targetLon
+      );
+      if(distance <= 0.01){
+        
+      }
       // Determine API endpoint based on requestType
       const endpoint = requestType === 'leave' ? '/outgoingrequest' : '/incomingrequest';
 
