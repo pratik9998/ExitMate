@@ -24,7 +24,7 @@ const VerifySignUpOtp = () => {
 
         if (response.status === 200) {
           Alert.alert('OTP Verified', 'You are successfully signed up!');
-          setUser(response.user);
+          setUser(response.data.user);
           router.replace('/Home Screen'); // Redirect to home screen after successful signup
         } else {
           Alert.alert('Signup Failed', 'Unable to create a user. Please try again.');

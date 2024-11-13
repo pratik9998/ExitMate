@@ -5,7 +5,9 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import { useUser } from '../UserContext';
 import  MY_URL from '../env';
+
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  
   const R = 6371; // Radius of the Earth in km
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -50,51 +52,35 @@ const CameraScreen = () => {
 
   const takePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
-      console.log('1.parsed Location : ', parsedLocation);
-      console.log('2.captured photo in camera : ', photo);
+      const photo = await cameraRef.current.takePictureAsync({ base64: true });
+      const photoBase64 = photo.base64;
+
+      // console.log('1.parsed Location : ', parsedLocation);
+      // console.log('2.captured photo in camera : ', photo.base64);
+
       const distance = getDistanceFromLatLonInKm(
         parsedLocation.longitude,
         parsedLocation.latitude,
         targetLat,
         targetLon
       );
+
       if(distance <= 0.01){
         
       }
-      // Determine API endpoint based on requestType
-      const endpoint = requestType === 'leave' ? '/outgoingrequest' : '/incomingrequest';
 
-      try {
-        const response = await axios.post(`${MY_URL}${endpoint}`,{ 
-          username: user.username, 
-          // image: photo.uri, // The photo URI or base64
-          // location: {
-          //   latitude: parsedLocation.coords.latitude,
-          //   longitude: parsedLocation.coords.longitude,
-          // },
-        });
-        
-        const result = response.data;
-        if (result.success) {
-          Alert.alert(`${requestType === 'leave' ? 'Leave' : 'Arriving'} Request Successful`);
-        } else {
-          Alert.alert('Request Error', result.message || `Invalid ${requestType} response`);
-        }
+      router.replace({
+        pathname: '/Home Screen/reviewphotoscreen',
+        params: {reqtype : requestType, plocation : location, photobase64 : photoBase64}
+      });
 
-      } catch (error) {
-        console.error(`Error sending ${requestType} request to backend:`, error);
-        Alert.alert('Request Failed', 'There was an issue with your request.');
-      }
-      user.inHostel = !user.inHostel;
-      router.replace('/Home Screen');
     } else {
       console.warn('Camera reference is not set.');
     }
   };
 
   function toggleCameraFacing() {
-    setFacing((current) => (current === 'back' ? 'front' : 'back'));
+    setFacing((current) => (current==='back' ? 'front' : 'back'));
   }
 
   return (

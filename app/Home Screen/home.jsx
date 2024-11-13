@@ -14,7 +14,7 @@ const Home = () => {
   const router = useRouter();
 
   const {user,setUser} = useUser(); //from user context
-  console.log(user);//now ok
+  // console.log('home screen inHostel : ' , user.inHostel);//now ok
 
   const handleLogout = () => {
     setUser(null);
@@ -32,7 +32,7 @@ const Home = () => {
   
   const handleArrivingRequest = async () => {
     setLoadingButton('arriving');
-    await getLocation('arrival'); // Assuming this gets the location
+    await getLocation('arrival');
   };  
 
   const getLocation = async (reqType) => {
