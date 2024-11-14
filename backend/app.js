@@ -41,6 +41,9 @@ app.post('/create',async(req,res)=>{
       console.log(err);
     }
 })
+app.post('/getuser',async(req,res)=>{
+   // 
+})
 app.post('/getdata',async(req,res)=>{
    try{
     let username = req.body.username;
@@ -99,10 +102,12 @@ app.post('/signup',async (req,res)=>{
 app.post('/outgoingrequest' , async(req,res)=>{
      try{
         let username = req.body.username;
+        let image = req.body.image;
         username = username.trim();
         username = username.toLowerCase();
         const out = await new outToken({
-          outDate: await new Date()
+          outDate: await new Date(),
+          outImage : image
         })
         out.save();
         await student.updateOne(
@@ -123,6 +128,7 @@ app.post('/outgoingrequest' , async(req,res)=>{
 app.post('/incomingrequest',async(req,res)=>{    
   try{
       let username = req.body.username;
+      let image = req.body.image;
     let out =await student.findOne({username});
     const tokenNumber = out.outTokens[out.outTokens.length - 1];
     const token = await outToken.findById(tokenNumber);
@@ -135,7 +141,7 @@ app.post('/incomingrequest',async(req,res)=>{
     token.save();
      await student.updateOne(
        { username: username }, // Filter by class ID
-       { $set: { inHostel: true } }
+       { $set: { inHostel: true  , inImage : image} }
      );
     return res.send({success : true});
   }
@@ -209,3 +215,4 @@ app.post("/changepassword",async (req,res)=>{
   }
 
 }); 
+

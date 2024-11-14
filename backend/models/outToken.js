@@ -11,6 +11,12 @@ const outToken = new Schema({
     active : {
         type : Boolean,
         default : true 
+    },
+    outImage : {
+        type : String
+    },
+    inImage : {
+        type : String
     }
 })
 const exp = mongoose.model("outToken",outToken);
