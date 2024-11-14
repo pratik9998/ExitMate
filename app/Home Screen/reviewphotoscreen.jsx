@@ -25,11 +25,7 @@ const ReviewPhotoScreen = () => {
     try {
       const response = await axios.post(`${MY_URL}${endpoint}`, {
         username: user.username,
-        // image: photobase64,
-        // location: {
-        //   latitude: location.coords.latitude,
-        //   longitude: location.coords.longitude,
-        // },
+        image: photobase64
       });
 
       const result = response.data;
@@ -42,7 +38,7 @@ const ReviewPhotoScreen = () => {
         Alert.alert('Request Error', result.message || 'Invalid response');
       }
     } catch (error) {
-      console.error(`Error sending ${requestType} request to backend:`, error);
+      console.error(`Error sending ${reqtype} request to backend:`, error);
       Alert.alert('Request Failed', 'There was an issue with your request.');
     }
   };
