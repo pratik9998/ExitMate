@@ -47,7 +47,6 @@ app.post('/getuser',async(req,res)=>{
        let username = req.body.username;
        let user = await student.findOne({username});
         let data = (await user.populate("outTokens")).outTokens;
-        console.log(data);
              return res.send({user, data});
     }catch(err)
     {
@@ -148,10 +147,11 @@ app.post('/incomingrequest',async(req,res)=>{
     }
     token.inDate = await new Date();
     token.active = 0;
+    token.inImage = image;
     token.save();
      await student.updateOne(
        { username: username }, // Filter by class ID
-       { $set: { inHostel: true  , inImage : image} }
+       { $set: { inHostel: true} }
      );
     return res.send({success : true});
   }
