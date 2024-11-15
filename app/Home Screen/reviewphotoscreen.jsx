@@ -25,6 +25,7 @@ const ReviewPhotoScreen = () => {
   const handleProceed = async () => {
     setLoading(true);
     const endpoint = reqtype === 'leave' ? '/outgoingrequest' : '/incomingrequest';
+    // console.log(endpoint)
     try {
       const response = await axios.post(`${MY_URL}${endpoint}`, {
         username: user.username,

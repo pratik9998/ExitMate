@@ -11,6 +11,7 @@ const Home = () => {
   const [photo, setPhoto] = useState(null);
   const [location, setLocation] = useState(null);
   const [loadingButton, setLoadingButton] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
   const router = useRouter();
 
   const {user,setUser} = useUser(); //from user context
@@ -21,8 +22,20 @@ const Home = () => {
     router.dismiss();
   };
 
-  const handleProfile = () => {
-    router.push('/Home Screen/profile');
+  const handleProfile =async () => {
+    setLoadingProfile(true);
+    try{
+      const response = await axios.post(`${MY_URL}/getuser`, {
+        username: user.username,
+      });
+      console.log("new user in home : ", response.data.user);
+      setUser(response.data.user);
+      router.push('/Home Screen/profile');
+    }catch (error) {
+      console.error("Error getting user in Profile", error);
+    }finally{
+      setLoadingProfile(false);
+    }
   };
 
   const handleLeaveRequest = async () => {
@@ -48,9 +61,10 @@ const Home = () => {
         pathname: '/Home Screen/camera',
         params: { requestType: reqType, location: JSON.stringify(location) },
       });
-      setLoadingButton(null);
     } catch (error) {
       console.error("Error getting location:", error);
+    } finally{
+      setLoadingButton(false);
     }
   };
 
@@ -84,9 +98,13 @@ const Home = () => {
         }
 
         {/* My Profile Button */}
-        <TouchableOpacity onPress={handleProfile} disabled={loadingButton}>
+        <TouchableOpacity onPress={handleProfile} disabled={loadingProfile}>
           <View className="bg-blue-600 py-3 px-10 rounded-full mb-4 w-62">
-            <Text className="text-white text-lg font-semibold text-center">My Profile</Text>
+            {loadingProfile ? (
+              <ActivityIndicator size="small" color="#ffffff" />
+            ) : (
+              <Text className="text-white text-lg font-semibold text-center">My Profile</Text>
+            )}
           </View>
         </TouchableOpacity>
 
