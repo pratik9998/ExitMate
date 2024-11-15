@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert,ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import  MY_URL from '../env';
@@ -14,8 +14,10 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(`${MY_URL}/login`, {
         params: { username, password },
@@ -30,9 +32,11 @@ const Login = () => {
       }else{
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
       }
-    } catch (error) {
+    }catch (error){
       console.log('Login Error:', error);
       Alert.alert('Error', 'Something went wrong. Please try again.');
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -68,8 +72,16 @@ const Login = () => {
         </View>
 
         {/* Login Button */}
-        <TouchableOpacity className="bg-blue-600 py-3 px-10 rounded-full mb-4" onPress={handleLogin}>
-          <Text className="text-white text-lg font-semibold text-center">Login</Text>
+        <TouchableOpacity
+          className={`bg-blue-600 py-3 px-10 rounded-full mb-4 ${loading ? 'opacity-50' : ''}`}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text className="text-white text-lg font-semibold text-center">Login</Text>
+          )}
         </TouchableOpacity>
 
         <Text className="text-gray-700 py-3 text-center">

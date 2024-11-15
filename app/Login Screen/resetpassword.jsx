@@ -102,7 +102,7 @@ const ResetPasswordScreen = () => {
           placeholder="Confirm New Password"
           value={confirmNewPassword}
           onChangeText={setConfirmNewPassword}
-          secureTextEntry={!showPassword}
+          // secureTextEntry={!showPassword}
           className="p-3 mb-4 border-2 border-gray-300 rounded-lg"
         />
 

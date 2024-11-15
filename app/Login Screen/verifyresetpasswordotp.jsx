@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import MY_URL from '../env';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -7,11 +7,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 const VerifyResetPasswordOtp = () => {
   const { username, newPassword, correctOtp } = useLocalSearchParams(); // Get params from router
   const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   // Function to handle OTP verification and password change
   const handleVerifyOtp = async () => {
     if (otp === correctOtp) {
+      setLoading(true);
       try {
         // Sending request to change the password using username and newPassword
         const response = await axios.post(`${MY_URL}/changepassword`, {
@@ -28,6 +30,8 @@ const VerifyResetPasswordOtp = () => {
       } catch (error) {
         console.log('Password Change Error:', error);
         Alert.alert('Error', 'Something went wrong. Please try again.');
+      } finally{
+        setLoading(false);
       }
     } else {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
@@ -54,9 +58,15 @@ const VerifyResetPasswordOtp = () => {
         <TouchableOpacity
           onPress={handleVerifyOtp}
           className="bg-green-600 py-3 px-10 rounded-full"
-        >
-          <Text className="text-white text-lg font-semibold">Verify</Text>
+          disabled={loading}
+        > 
+          {loading ? (
+              <ActivityIndicator size="small" color="#ffffff"/>
+          ) : (
+           <Text className="text-white text-lg font-semibold">Verify</Text>
+          )}
         </TouchableOpacity>
+        
       </View>
     </View>
   );
