@@ -42,7 +42,15 @@ app.post('/create',async(req,res)=>{
     }
 })
 app.post('/getuser',async(req,res)=>{
-   // 
+    try{
+      console.log(req.body)
+       let username = req.body.username;
+       let user = await student.findOne({username});
+             return res.send({user});
+    }catch(err)
+    {
+      console.log(err);
+    }
 })
 app.post('/getdata',async(req,res)=>{
    try{
