@@ -52,7 +52,7 @@ const CameraScreen = () => {
 
   const takePhoto = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({ base64: true, quality : 0.2 });
+      const photo = await cameraRef.current.takePictureAsync({ base64: true , quality : 0.2});
       const photoBase64 = photo.base64;
 
       // console.log('1.parsed Location : ', parsedLocation);
