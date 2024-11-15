@@ -46,7 +46,9 @@ app.post('/getuser',async(req,res)=>{
       console.log(req.body)
        let username = req.body.username;
        let user = await student.findOne({username});
-             return res.send({user});
+        let data = (await user.populate("outTokens")).outTokens;
+        console.log(data);
+             return res.send({user, data});
     }catch(err)
     {
       console.log(err);
