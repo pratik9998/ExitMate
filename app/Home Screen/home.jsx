@@ -14,7 +14,7 @@ const Home = () => {
   const router = useRouter();
 
   const {user,setUser} = useUser(); //from user context
-  // console.log('home screen inHostel : ' , user.inHostel);//now ok
+  // console.log('home screen user : ' , user);//now ok 
 
   const handleLogout = () => {
     setUser(null);

@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import MY_URL from '../env';
 import { useUser } from '../UserContext';
 
 const VerifySignUpOtp = () => {
-  const [otp, setOtp] = useState(''); // OTP input state
+  const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
   const { setUser } = useUser();
 
   const router = useRouter();
   const { correctotp, username, password } = useLocalSearchParams();
 
-  // Handle OTP verification
   const handleVerify = async () => {
     if (otp === correctotp) {
+      setLoading(true);
       try {
-        // Make a POST request to the backend to create the user
+  
         const response = await axios.post(`${MY_URL}/create`, {
           username: username,
           password: password,
@@ -25,13 +26,15 @@ const VerifySignUpOtp = () => {
         if (response.status === 200) {
           Alert.alert('OTP Verified', 'You are successfully signed up!');
           setUser(response.data.user);
-          router.replace('/Home Screen'); // Redirect to home screen after successful signup
+          router.replace('/Home Screen');
         } else {
           Alert.alert('Signup Failed', 'Unable to create a user. Please try again.');
         }
       } catch (error) {
         Alert.alert('Signup Failed', 'Could not create the user. Please try again.');
         console.error('Error creating user:', error);
+      } finally {
+        setLoading(false);
       }
     } else {
       Alert.alert('Invalid OTP', 'Please enter the correct OTP.');
@@ -59,9 +62,15 @@ const VerifySignUpOtp = () => {
         <TouchableOpacity
           onPress={handleVerify}
           className="bg-green-600 py-3 px-10 rounded-full"
+          disabled={loading}
         >
-          <Text className="text-white text-lg font-semibold">Verify</Text>
+          {loading ? (
+             <ActivityIndicator size="small" color="#ffffff"/>
+          ) : (
+            <Text className="text-white text-lg font-semibold">Verify</Text>
+          )}
         </TouchableOpacity>
+        
       </View>
     </View>
   );

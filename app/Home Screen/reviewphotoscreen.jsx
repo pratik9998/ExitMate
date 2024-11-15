@@ -1,8 +1,8 @@
 import { useUser } from '../UserContext';
 import MY_URL from '../env';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { View,Text,Image,TouchableOpacity,Alert,StyleSheet} from 'react-native';
+import {React, useState} from 'react';
+import { View,Text,Image,TouchableOpacity,Alert,StyleSheet, ActivityIndicator} from 'react-native';
 import axios from 'axios';
 
 const ReviewPhotoScreen = () => {
@@ -12,7 +12,9 @@ const ReviewPhotoScreen = () => {
   const {reqtype, plocation, photobase64} = useLocalSearchParams();
   const location = JSON.parse(plocation);
 
-  console.log(reqtype);
+  const [loading, setLoading] = useState(false);
+
+  console.log("review photo request type : ",reqtype);
 
   // Indian Timestamp
   const indianTimestamp = new Date().toLocaleString('en-IN', {
@@ -21,6 +23,7 @@ const ReviewPhotoScreen = () => {
   });
 
   const handleProceed = async () => {
+    setLoading(true);
     const endpoint = reqtype === 'leave' ? '/outgoingrequest' : '/incomingrequest';
     try {
       const response = await axios.post(`${MY_URL}${endpoint}`, {
@@ -40,6 +43,8 @@ const ReviewPhotoScreen = () => {
     } catch (error) {
       console.error(`Error sending ${reqtype} request to backend:`, error);
       Alert.alert('Request Failed', 'There was an issue with your request.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,6 +55,7 @@ const ReviewPhotoScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Review Your Photo and Location</Text>
+
       {photobase64 ? (
         <Image
           source={{ uri: `data:image/jpeg;base64,${photobase64}` }}
@@ -62,19 +68,26 @@ const ReviewPhotoScreen = () => {
       <Text style={styles.requesttype}>
         Request Type: {reqtype==='leave' ?  'Leave' : 'Arriving'}
       </Text>
+
       <Text style={styles.location}>
         Location: {location ? `${location.coords.latitude}, ${location.coords.longitude}` : 'Location not available'}
       </Text>
+
       <Text style={styles.timestamp}>Indian Timestamp: {indianTimestamp}</Text>
+
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={handleProceed} style={styles.button}>
-          <Text style={styles.buttonText}>
-            Proceed
-          </Text>
+        <TouchableOpacity onPress={handleProceed} style={styles.button} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
+            <Text style={styles.buttonText}>Proceed</Text>
+          )}
         </TouchableOpacity>
+
         <TouchableOpacity onPress={handleCancel} style={[styles.button, styles.cancelButton]}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
