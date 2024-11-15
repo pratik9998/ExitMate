@@ -7,6 +7,7 @@ const RootLayout = () => {
       <Stack>
         <Stack.Screen name="Login Screen" options={{ headerShown: false }} />
         <Stack.Screen name="Home Screen" options={{ headerShown: false }} />
+        <Stack.Screen name="Admin Screen" options={{ headerShown: false }} />
       </Stack>
     </UserProvider>
   );

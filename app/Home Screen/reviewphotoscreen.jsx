@@ -14,7 +14,7 @@ const ReviewPhotoScreen = () => {
 
   const [loading, setLoading] = useState(false);
 
-  console.log("review photo request type : ",reqtype);
+  // console.log("review photo request type : ",reqtype);
 
   // Indian Timestamp
   const indianTimestamp = new Date().toLocaleString('en-IN', {

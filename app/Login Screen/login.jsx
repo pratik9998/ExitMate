@@ -26,9 +26,11 @@ const Login = () => {
       console.log('after login inHostel : ', result.user.inHostel);
 
       if(result.success){
-        Alert.alert('Login Successful', 'Welcome to ExitMate!');
+        // Alert.alert('Login Successful', 'Welcome to ExitMate!');
         setUser(result.user);
-        router.replace('/Home Screen');
+        if(userType !== 'Admin')
+          router.replace('/Home Screen/home');
+        else router.replace('/Admin Screen/home');
       }else{
         Alert.alert('Login Failed', result.message || 'Invalid credentials');
       }

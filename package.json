@@ -21,6 +21,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
+    "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.5",
     "expo": "~51.0.39",
     "expo-camera": "~15.0.16",

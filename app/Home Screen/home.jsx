@@ -28,7 +28,7 @@ const Home = () => {
       const response = await axios.post(`${MY_URL}/getuser`, {
         username: user.username,
       });
-      console.log("new user in home : ", response.data.user);
+      // console.log("new user in home : ", response.data.user);
       setUser(response.data.user);
       router.push('/Home Screen/profile');
     }catch (error) {
