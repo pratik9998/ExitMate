@@ -10,6 +10,7 @@ const app = express();
 const cors = require("cors");
 const sdmail = require("./middleware/sendemail");
 const outToken = require("./models/outToken");
+const geolib = require("geolib");
 app.use(cors());
 // sending request to postman or any other may be gives error we need to express .json to convert into json file
 app.use(express.json());
@@ -22,7 +23,6 @@ app.use((req,res,next)=>{
 app.listen(5000, function () {
   console.log("Listening on port 5000");
 });
-
 app.post('/create',async(req,res)=>{
     try{
          let username = req.body.username;
@@ -55,11 +55,20 @@ app.post('/getuser',async(req,res)=>{
 })
 app.post('/checklocation',async(req,res)=>{
    try{
-    console.log(req.body.location);
-    const longitude =  81.7713597;
-    const latitude = 25.4271368;
-    
-    return res.send({success:true});
+     const longitude = 81.7713597;
+     const latitude = 25.4271368;
+     const user_longitude = req.body.location.coords.longitude;
+     const user_latitude = req.body.location.coords.latitude;
+     const distance = geolib.getDistance(
+       { latitude : latitude, longitude : longitude },
+       { latitude: user_latitude, longitude: user_longitude }
+     );
+     console.log(distance)
+     if(distance <= 100)
+     {
+       return res.send({success : true});
+     }
+     return res.send({success : false});
    }catch(err)
    {
     console.log(err);
