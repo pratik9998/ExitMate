@@ -31,7 +31,9 @@ const ReviewPhotoScreen = () => {
         username: user.username,
         image: photobase64
       });
-
+      const response2 = await axios.post(`${MY_URL}/checklocation`, {
+        location
+      });      
       const result = response.data;
 
       if (result.success) {

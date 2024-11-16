@@ -53,30 +53,13 @@ app.post('/getuser',async(req,res)=>{
       console.log(err);
     }
 })
-app.post('/getdata',async(req,res)=>{
+app.post('/checklocation',async(req,res)=>{
    try{
-    let username = req.body.username;
-    let out = student.findOne({username});
-    let data = (await out.populate("outTokens")).outTokens;
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    let a = [];
-    for(const item of data){
+    console.log(req.body.location);
+    const longitude =  81.7713597;
+    const latitude = 25.4271368;
     
-    }
-    return res.send({ success: true });
+    return res.send({success:true});
    }catch(err)
    {
     console.log(err);

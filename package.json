@@ -35,6 +35,7 @@
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
     "express": "^4.21.0",
+    "geolib": "^3.3.4",
     "googleapis": "^144.0.0",
     "mailgen": "^2.0.28",
     "mongoose": "^8.7.0",
