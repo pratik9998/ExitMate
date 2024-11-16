@@ -6,25 +6,6 @@ import axios from 'axios';
 import { useUser } from '../UserContext';
 import  MY_URL from '../env';
 
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-  
-  const R = 6371; // Radius of the Earth in km
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c; // Distance in km
-  return distance;
-}
-
-const targetLat = 25.4322185; 
-const targetLon = 81.7707415; 
-
 const CameraScreen = () => {
   const [facing, setFacing] = useState('front');
   const [permission, requestPermission] = useCameraPermissions();
@@ -41,12 +22,15 @@ const CameraScreen = () => {
 
   if (!permission.granted) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.message}>We need your permission to show the camera</Text>
-        <TouchableOpacity onPress={requestPermission} style={styles.button}>
-          <Text style={styles.text}>Grant Permission</Text>
-        </TouchableOpacity>
+      <View className="flex-1 justify-center items-center bg-gray-100">
+        <View className="w-4/5 p-5 bg-white rounded-lg shadow-md">
+          <Text className="text-center text-gray-700 mb-4">We need your permission to show the camera</Text>
+          <TouchableOpacity onPress={requestPermission} className="bg-green-500 py-3 rounded-md">
+            <Text className="text-center text-white font-bold">Grant Permission</Text>
+          </TouchableOpacity>
+        </View>
       </View>
+
     );
   }
 
@@ -57,17 +41,6 @@ const CameraScreen = () => {
 
       // console.log('1.parsed Location : ', parsedLocation);
       // console.log('2.captured photo in camera : ', photo.base64);
-
-      const distance = getDistanceFromLatLonInKm(
-        parsedLocation.longitude,
-        parsedLocation.latitude,
-        targetLat,
-        targetLon
-      );
-
-      if(distance <= 0.01){
-        
-      }
 
       router.replace({
         pathname: '/Home Screen/reviewphotoscreen',
@@ -84,53 +57,49 @@ const CameraScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <CameraView
-        ref={cameraRef}
-        style={styles.camera}
-        facing={facing}
-      >
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-            <Text style={styles.text}>Flip Camera</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={takePhoto}>
-            <Text style={styles.text}>Take Photo</Text>
-          </TouchableOpacity>
-        </View>
-      </CameraView>
-    </View>
+    <View className="flex-1">
+    <CameraView ref={cameraRef} className="flex-1" facing={facing}>
+      <View className="absolute bottom-8 left-0 right-0 flex-row justify-evenly">
+        <TouchableOpacity className="bg-gray-700 px-4 py-2 rounded-lg" onPress={toggleCameraFacing}>
+          <Text className="text-white text-lg font-bold">Flip Camera</Text>
+        </TouchableOpacity>
+        <TouchableOpacity className="bg-blue-600 px-4 py-2 rounded-lg" onPress={takePhoto}>
+          <Text className="text-white text-lg font-bold">Take Photo</Text>
+        </TouchableOpacity>
+      </View>
+    </CameraView>
+  </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  message: {
-    textAlign: 'center',
-    paddingBottom: 10,
-  },
-  camera: {
-    flex: 1,
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    margin: 64,
-  },
-  button: {
-    flex: 1,
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//   },
+//   message: {
+//     textAlign: 'center',
+//     paddingBottom: 10,
+//   },
+//   camera: {
+//     flex: 1,
+//   },
+//   buttonContainer: {
+//     flex: 1,
+//     flexDirection: 'row',
+//     backgroundColor: 'transparent',
+//     margin: 64,
+//   },
+//   button: {
+//     flex: 1,
+//     alignSelf: 'flex-end',
+//     alignItems: 'center',
+//   },
+//   text: {
+//     fontSize: 18,
+//     fontWeight: 'bold',
+//     color: 'white',
+//   },
+// });
 
 export default CameraScreen;

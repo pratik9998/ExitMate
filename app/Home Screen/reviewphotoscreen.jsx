@@ -27,21 +27,25 @@ const ReviewPhotoScreen = () => {
     const endpoint = reqtype === 'leave' ? '/outgoingrequest' : '/incomingrequest';
     // console.log(endpoint)
     try {
-      const response = await axios.post(`${MY_URL}${endpoint}`, {
+      const response1 = await axios.post(`${MY_URL}${endpoint}`, {
         username: user.username,
         image: photobase64
       });
       const response2 = await axios.post(`${MY_URL}/checklocation`, {
         location
       });      
-      const result = response.data;
+      const result1 = response1.data;
+      const result2 = response2.data;
 
-      if (result.success) {
+      if (result2.success && result1.success) {
         Alert.alert('Request Successful', `${reqtype === 'leave' ? 'Leave' : 'Arriving'} request completed`);
         user.inHostel = !user.inHostel;
         router.replace('/Home Screen/home');
       } else {
-        Alert.alert('Request Error', result.message || 'Invalid response');
+        if(!result1.success)
+          Alert.alert('Request Error', result1.message || 'Invalid request');
+        else 
+          Alert.alert('Out of Location', result2.message || 'You need to be present in hostel');
       }
     } catch (error) {
       console.error(`Error sending ${reqtype} request to backend:`, error);
