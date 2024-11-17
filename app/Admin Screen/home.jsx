@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Text, View,TouchableOpacity, TextInput, Button, ScrollView, StatusBar,ActivityIndicator } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useUser } from '../UserContext';
-import  MY_URL from '../env';
+import MY_URL from '../env';
 
 const AdminHome = () => {
   const router = useRouter();
@@ -11,6 +11,7 @@ const AdminHome = () => {
   const [rollNumber, setRollNumber] = useState('');
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   const handleGetDetails = async () => {
     setLoading(true);
@@ -26,6 +27,34 @@ const AdminHome = () => {
     }
   };
 
+  const handleDownload = async () => {
+    setDownloadLoading(true);
+    try {
+      axios.post(`${MY_URL}/makecsv`, { username: rollNumber }, { responseType: 'blob' })
+        .then(response => {
+          const file = response.data;
+          const fileURL = window.URL.createObjectURL(file);  
+          const link = document.createElement('a'); 
+          link.href = fileURL;
+          link.download = `${rollNumber}.xlsx`;
+          document.body.appendChild(link);
+          link.click(); 
+          document.body.removeChild(link);
+  
+          window.URL.revokeObjectURL(fileURL);  // Free up memory
+        })
+        .catch(error => {
+          console.error('Error downloading file:', error);
+          alert('Error downloading the file, please try again.');
+        });
+    } catch (error) {
+      console.error('Error in handleDownload:', error);
+    } finally {
+      setDownloadLoading(false);
+    }
+  };
+    
+  
   const calculateLeaveDuration = (outDate, inDate) => {
     const out = new Date(outDate);
     const inD = new Date(inDate);
@@ -80,7 +109,6 @@ const AdminHome = () => {
           )}
         </View>
 
-
         {/* Display Basic Info */}
         {details && (
           <View>
@@ -97,7 +125,23 @@ const AdminHome = () => {
         )}
 
         {/* Requests Section */}
-        <Text className="text-2xl font-semibold text-gray-800 mt-4 mb-2">Your Requests</Text>
+        <View className="mt-6 flex flex-row justify-between items-center mb-4">
+        <Text className="text-2xl font-semibold text-gray-800">Requests</Text>
+        {details && details.outTokens.length > 0 && (
+          downloadLoading ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <TouchableOpacity
+              className="bg-green-500 rounded p-2"
+              onPress={handleDownload}
+              activeOpacity={0.7}
+            >
+              <Text className="text-white font-semibold">Download</Text>
+            </TouchableOpacity>
+          )
+        )}
+      </View>
+
         {details && details.outTokens.length > 0 ? (
           [...details.outTokens].reverse().map((token, index) => {
             const { days, hours, minutes } =
