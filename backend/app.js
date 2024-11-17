@@ -48,7 +48,7 @@ app.post('/getuser',async(req,res)=>{
     try{
        let username = req.body.username;
         username = username.trim();
-        username = username.toLowerCase()
+        username = username.toLowerCase();
        let user = await student.findOne({username});
        if(!user)return res.send({user,data : []});
        let data = (await user.populate("outTokens")).outTokens;
@@ -193,15 +193,12 @@ app.post('/login',async(req,res)=>{
 })
 
 app.post('/makecsv',async (req,res)=>{
-  // Example data
-  const data = [
-    { name: "John", age: 30, city: "New York" },
-    { name: "Jane", age: 25, city: "Los Angeles" },
-    { name: "Mike", age: 35, city: "Chicago" },
-  ];
   try {
-    const username = req.body.username;
+    let username = req.body.username;
+    username = username.trim();
+    username = username.toLowerCase();
     let user = await student.findOne({ username });
+    if(!user)return res.send({success : false});
     let data = (await user.populate("outTokens")).outTokens;
     if (data.length == 0) {
       return res.send({ success: false, message: "no data found" });

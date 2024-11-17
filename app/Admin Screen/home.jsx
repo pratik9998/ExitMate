@@ -4,7 +4,9 @@ import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useUser } from '../UserContext';
 import MY_URL from '../env';
-
+import { Buffer } from 'buffer'; // Import buffer for base64 conversion
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 const AdminHome = () => {
   const router = useRouter();
   const { user } = useUser();
@@ -33,33 +35,35 @@ const AdminHome = () => {
       const response = await axios.post(`${MY_URL}/makecsv`,{ 
         username: rollNumber, 
       });
-      if (response.data.success) {
-        // console.log(response.data.excelBuffer.data);
-        const file = new Blob([response.data.excelBuffer], {
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        });
-        // console.log(file)
-        const fileURL = window.URL.createObjectURL(file);
-        console.log(fileURL);
-        
-        const link = document.createElement('a');
-        link.href = fileURL;
-        link.setAttribute('download', `${rollNumber}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(fileURL);
-      } else {
-        alert('Failed to download file: No data available.');
-      } 
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      alert('Error downloading the file, please try again.');
-    } finally {
-      setDownloadLoading(false);
-    }
-  };  
-  
+       if (response.data) {
+         const base64Data = Buffer.from(response.data.excelBuffer, "binary").toString(
+           "base64"
+         );
+
+         // Define the file path in the device's document directory
+         const fileUri = `${FileSystem.documentDirectory}${rollNumber}.xlsx`;
+
+         // Write the base64 data to a file
+         await FileSystem.writeAsStringAsync(fileUri, base64Data, {
+           encoding: FileSystem.EncodingType.Base64,
+         });
+
+         // Share the file using Expo's Sharing API
+         if (await Sharing.isAvailableAsync()) {
+           await Sharing.shareAsync(fileUri);
+           alert("File shared successfully!");
+         } else {
+           alert("Sharing is not available on this device.");
+         }
+       } else {
+         alert("Failed to download file: No data available.");
+       }    
+    }catch(err)
+    {
+      console.log(err);
+    };
+    setDownloadLoading(false);
+  } 
   const calculateLeaveDuration = (outDate, inDate) => {
     const out = new Date(outDate);
     const inD = new Date(inDate);
