@@ -96,50 +96,46 @@ const AdminHome = () => {
           </View>
         )}
 
-        {/* Requests Section (conditionally rendered) */}
-        {rollNumber && details?.outTokens && (
-          <>
-            <Text className="text-2xl font-semibold text-gray-800 mt-4 mb-2">Your Requests</Text>
-            {details.outTokens.length > 0 ? (
-              [...details.outTokens].reverse().map((token, index) => {
-                const { days, hours, minutes } =
-                  !token.active && token.inDate ? calculateLeaveDuration(token.outDate, token.inDate) : { days: null, hours: null, minutes: null };
+        {/* Requests Section */}
+        <Text className="text-2xl font-semibold text-gray-800 mt-4 mb-2">Your Requests</Text>
+        {details && details.outTokens.length > 0 ? (
+          [...details.outTokens].reverse().map((token, index) => {
+            const { days, hours, minutes } =
+              !token.active && token.inDate ? calculateLeaveDuration(token.outDate, token.inDate) : { days: null, hours: null, minutes: null };
 
-                return (
-                  <View
-                    key={index}
-                    className={`mb-4 p-4 rounded-lg shadow-md ${
-                      index % 2 === 0 ? 'bg-blue-200' : 'bg-blue-100'
-                    }`}
-                  >
-                    <Text className="text-gray-600">
-                      <Text className="font-medium">Request {details.outTokens.length - index}: </Text>
-                      {token.active ? 'Leave Request Made' : 'Both Requests Completed'}
+            return (
+              <View
+                key={index}
+                className={`mb-4 p-4 rounded-lg shadow-md ${
+                  index % 2 === 0 ? 'bg-blue-200' : 'bg-blue-100'
+                }`}
+              >
+                <Text className="text-gray-600">
+                  <Text className="font-medium">Request {details.outTokens.length - index}: </Text>
+                  {token.active ? 'Leave Request Made' : 'Both Requests Completed'}
+                </Text>
+                <Text className="text-gray-600 mt-1">
+                  <Text className="font-medium">Leave Date & Time: </Text>
+                  {formatToIST(token.outDate)}
+                </Text>
+                {!token.active && (
+                  <>
+                    <Text className="text-gray-600 mt-1">
+                      <Text className="font-medium">Arriving Date & Time: </Text>
+                      {formatToIST(token.inDate)}
                     </Text>
                     <Text className="text-gray-600 mt-1">
-                      <Text className="font-medium">Leave Date & Time: </Text>
-                      {formatToIST(token.outDate)}
+                      <Text className="font-medium">Total Leave Duration: </Text>
+                      {days} {days === 1 ? 'day' : 'days'}, {hours} {hours === 1 ? 'hour ' : 'hours '} 
+                      and {minutes} {minutes === 1 ? 'minute' : 'minutes'}
                     </Text>
-                    {!token.active && (
-                      <>
-                        <Text className="text-gray-600 mt-1">
-                          <Text className="font-medium">Arriving Date & Time: </Text>
-                          {formatToIST(token.inDate)}
-                        </Text>
-                        <Text className="text-gray-600 mt-1">
-                          <Text className="font-medium">Total Leave Duration: </Text>
-                          {days} {days === 1 ? 'day' : 'days'}, {hours} {hours === 1 ? 'hour ' : 'hours '} 
-                          and {minutes} {minutes === 1 ? 'minute' : 'minutes'}
-                        </Text>
-                      </>
-                    )}
-                  </View>
-                );
-              })
-            ) : (
-              <Text className="text-gray-600">No requests found.</Text>
-            )}
-          </>
+                  </>
+                )}
+              </View>
+            );
+          })
+        ) : (
+          <Text className="text-gray-600">No requests found.</Text>
         )}
       </ScrollView>
     </View>

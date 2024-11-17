@@ -23,7 +23,7 @@ const Login = () => {
         params: { username, password },
       });
       const result = response.data;
-      console.log('after login inHostel : ', result.user.inHostel);
+      // console.log('after login inHostel : ', result.user.inHostel);
 
       if(result.success){
         // Alert.alert('Login Successful', 'Welcome to ExitMate!');
