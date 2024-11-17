@@ -30,30 +30,35 @@ const AdminHome = () => {
   const handleDownload = async () => {
     setDownloadLoading(true);
     try {
-      axios.post(`${MY_URL}/makecsv`, { username: rollNumber }, { responseType: 'blob' })
-        .then(response => {
-          const file = response.data;
-          const fileURL = window.URL.createObjectURL(file);  
-          const link = document.createElement('a'); 
-          link.href = fileURL;
-          link.download = `${rollNumber}.xlsx`;
-          document.body.appendChild(link);
-          link.click(); 
-          document.body.removeChild(link);
-  
-          window.URL.revokeObjectURL(fileURL);  // Free up memory
-        })
-        .catch(error => {
-          console.error('Error downloading file:', error);
-          alert('Error downloading the file, please try again.');
+      const response = await axios.post(`${MY_URL}/makecsv`,{ 
+        username: rollNumber, 
+      });
+      if (response.data.success) {
+        // console.log(response.data.excelBuffer.data);
+        const file = new Blob([response.data.excelBuffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
+        // console.log(file)
+        const fileURL = window.URL.createObjectURL(file);
+        console.log(fileURL);
+        
+        const link = document.createElement('a');
+        link.href = fileURL;
+        link.setAttribute('download', `${rollNumber}.xlsx`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(fileURL);
+      } else {
+        alert('Failed to download file: No data available.');
+      } 
     } catch (error) {
-      console.error('Error in handleDownload:', error);
+      console.error('Error downloading file:', error);
+      alert('Error downloading the file, please try again.');
     } finally {
       setDownloadLoading(false);
     }
-  };
-    
+  };  
   
   const calculateLeaveDuration = (outDate, inDate) => {
     const out = new Date(outDate);
