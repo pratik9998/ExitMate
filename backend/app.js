@@ -50,6 +50,7 @@ app.post('/getuser',async(req,res)=>{
         username = username.trim();
         username = username.toLowerCase()
        let user = await student.findOne({username});
+       if(!user)return res.send({user,data : []});
        let data = (await user.populate("outTokens")).outTokens;
              return res.send({user, data});
     }catch(err)
