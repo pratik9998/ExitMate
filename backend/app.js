@@ -11,6 +11,9 @@ const cors = require("cors");
 const sdmail = require("./middleware/sendemail");
 const outToken = require("./models/outToken");
 const geolib = require("geolib");
+const XLSX = require("xlsx");
+const image = require("./models/image");
+const fs = require("fs");
 app.use(cors());
 // sending request to postman or any other may be gives error we need to express .json to convert into json file
 app.use(express.json());
@@ -46,7 +49,7 @@ app.post('/getuser',async(req,res)=>{
       console.log(req.body)
        let username = req.body.username;
        let user = await student.findOne({username});
-        let data = (await user.populate("outTokens")).outTokens;
+       let data = (await user.populate("outTokens")).outTokens;
              return res.send({user, data});
     }catch(err)
     {
@@ -103,12 +106,17 @@ app.post('/signup',async (req,res)=>{
 app.post('/outgoingrequest' , async(req,res)=>{
      try{
         let username = req.body.username;
-        let image = req.body.image;
+        let image_string = req.body.image;
         username = username.trim();
         username = username.toLowerCase();
+        
+        const img = await new image({
+          image : image_string
+        })
+        img.save();
         const out = await new outToken({
           outDate: await new Date(),
-          outImage : image
+          outImage : img
         })
         out.save();
         await student.updateOne(
@@ -129,7 +137,7 @@ app.post('/outgoingrequest' , async(req,res)=>{
 app.post('/incomingrequest',async(req,res)=>{    
   try{
       let username = req.body.username;
-      let image = req.body.image;
+      let image_string = req.body.image;
     let out =await student.findOne({username});
     const tokenNumber = out.outTokens[out.outTokens.length - 1];
     const token = await outToken.findById(tokenNumber);
@@ -137,9 +145,11 @@ app.post('/incomingrequest',async(req,res)=>{
     {
       return res.send({success: false , message : "Invalid Request"});
     }
+    const img = await new image({image : image_string});
+    img.save();
     token.inDate = await new Date();
     token.active = 0;
-    token.inImage = image;
+    token.inImage = img;
     token.save();
      await student.updateOne(
        { username: username }, // Filter by class ID
@@ -176,6 +186,60 @@ app.post('/login',async(req,res)=>{
   }
   else{
     res.send({success:false,message:"Wrong Password"});
+  }
+})
+
+app.post('/makecsv',async (req,res)=>{
+  // Example data
+  const data = [
+    { name: "John", age: 30, city: "New York" },
+    { name: "Jane", age: 25, city: "Los Angeles" },
+    { name: "Mike", age: 35, city: "Chicago" },
+  ];
+  try {
+    const username = req.body.username;
+    let user = await student.findOne({ username });
+    let data = (await user.populate("outTokens")).outTokens;
+    if (data.length == 0) {
+      return res.send({ success: false, message: "no data found" });
+    }
+    const transformedData = data
+      .filter((entry) => entry.inDate && entry.outDate) // Filter out rows without inDate or outDate
+      .map((entry) => {
+        const inDate = entry.inDate.toISOString().split("T")[0]; // Extract only the date
+        const outDate = entry.outDate.toISOString().split("T")[0]; // Extract only the date
+        const differenceInTime =
+          new Date(entry.inDate).getTime() - new Date(entry.outDate).getTime();
+        const numberOfDays = differenceInTime / (1000 * 3600 * 24); // Convert to days
+
+        return {
+          inDate: inDate,
+          outDate: outDate,
+          numberOfDays: numberOfDays.toFixed(2),
+        };
+      });
+    const worksheet = XLSX.utils.json_to_sheet(transformedData);
+    const calculateColumnWidths = (data) => {
+      return Object.keys(data[0]).map((key) => {
+        const maxLength = Math.max(
+          ...data.map((row) => (row[key] ? row[key].toString().length : 0))
+        );
+        return { width: maxLength + 2 }; // Adding extra space for readability
+      });
+    };
+    worksheet["!cols"] = calculateColumnWidths(transformedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const excelBuffer = XLSX.write(workbook, {
+      type: "buffer",
+      bookType: "xlsx",
+    });
+
+    // Send the file to the frontend
+    res.attachment("output.xlsx"); // Set the file name
+    return res.send({excelBuffer,success:true}); // Send the buffer
+  } catch (err) {
+    console.error("Error converting to CSV", err);
   }
 })
 
