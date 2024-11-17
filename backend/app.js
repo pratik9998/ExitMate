@@ -46,14 +46,16 @@ app.post('/create',async(req,res)=>{
 })
 app.post('/getuser',async(req,res)=>{
     try{
-      console.log(req.body)
        let username = req.body.username;
+        username = username.trim();
+        username = username.toLowerCase()
        let user = await student.findOne({username});
        let data = (await user.populate("outTokens")).outTokens;
              return res.send({user, data});
     }catch(err)
     {
       console.log(err);
+      return res.send({success : false});
     }
 })
 app.post('/checklocation',async(req,res)=>{
