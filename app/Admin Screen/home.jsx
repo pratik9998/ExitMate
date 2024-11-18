@@ -7,6 +7,7 @@ import MY_URL from '../env';
 import { Buffer } from 'buffer'; // Import buffer for base64 conversion
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
+
 const AdminHome = () => {
   const router = useRouter();
   const { user } = useUser();
@@ -51,9 +52,9 @@ const AdminHome = () => {
          // Share the file using Expo's Sharing API
          if (await Sharing.isAvailableAsync()) {
            await Sharing.shareAsync(fileUri);
-           alert("File shared successfully!");
+          //  alert("File shared successfully!");
          } else {
-           alert("Sharing is not available on this device.");
+          //  alert("Sharing is not available on this device.");
          }
        } else {
          alert("Failed to download file: No data available.");
@@ -90,7 +91,7 @@ const AdminHome = () => {
 
   return (
     <View
-      className="flex-1 bg-gray-200"
+      className="flex-1 bg-gray-100"
       style={{ paddingTop: StatusBar.currentHeight || 0, paddingBottom: 10 }}
     >
       <ScrollView contentContainerStyle={{ padding: 16 }}>
