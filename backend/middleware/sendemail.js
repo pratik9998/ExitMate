@@ -21,7 +21,6 @@ const sdmail = async (email) => {
   const sendMail = async () => {
     try {
       const accessToken = await oAuth2Client.getAccessToken();
-
       const transport = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -33,16 +32,13 @@ const sdmail = async (email) => {
           accessToken: accessToken,
         },
       });
-
       let otp = Math.floor(100000 + Math.random() * 900000).toString();
       const mailOptions = {
         from: "EXITMATE <np621522@gmail.com>",
         to: userEmail,
         subject: "Verification Code",
         text: "Your 6 Digit Code for verification is " + otp,
-
       };
-
       const result = await transport.sendMail(mailOptions);
       return { success: true, otp }; // return success and otp
     } catch (error) {

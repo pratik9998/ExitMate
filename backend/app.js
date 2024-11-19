@@ -61,8 +61,9 @@ app.post('/getuser',async(req,res)=>{
 })
 app.post('/checklocation',async(req,res)=>{
    try{
-     const longitude = 81.7713597;
-     const latitude = 25.4271368;
+    // 25.43202907987605, 81.77052767928059; --> CC3 location
+     const longitude = 81.77052767;
+     const latitude = 25.432029079;
      const user_longitude = req.body.location.coords.longitude;
      const user_latitude = req.body.location.coords.latitude;
      const distance = geolib.getDistance(
