@@ -1,9 +1,15 @@
-import { Text, View, ScrollView, StatusBar } from 'react-native';
-import React from 'react';
+import { Text, View, ScrollView, StatusBar,ActivityIndicator,TouchableOpacity } from 'react-native';
+import React,{useState} from 'react';
 import { useUser } from '../UserContext';
+import { Buffer } from 'buffer'; // Import buffer for base64 conversion
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import MY_URL from '../env';
+import axios from 'axios';
 
 const Profile = () => {
   const { user } = useUser();
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   const formatToIST = (dateString) => {
     const date = new Date(dateString);
@@ -19,6 +25,42 @@ const Profile = () => {
     return new Intl.DateTimeFormat('en-GB', options).format(date);
   };
 
+  const handleDownload = async () => {
+    setDownloadLoading(true);
+    try {
+      const response = await axios.post(`${MY_URL}/makecsv`,{ 
+        username: user.username, 
+      });
+       if (response.data) {
+         const base64Data = Buffer.from(response.data.excelBuffer, "binary").toString(
+           "base64"
+         );
+
+         // Define the file path in the device's document directory
+         const fileUri = `${FileSystem.documentDirectory}${user.username}.xlsx`;
+
+         // Write the base64 data to a file
+         await FileSystem.writeAsStringAsync(fileUri, base64Data, {
+           encoding: FileSystem.EncodingType.Base64,
+         });
+
+         // Share the file using Expo's Sharing API
+         if (await Sharing.isAvailableAsync()) {
+           await Sharing.shareAsync(fileUri);
+          //  alert("File shared successfully!");
+         } else {
+          //  alert("Sharing is not available on this device.");
+         }
+       } else {
+         alert("Failed to download file: No data available.");
+       }    
+    }catch(err)
+    {
+      console.log(err);
+    };
+    setDownloadLoading(false);
+  }
+
   const calculateLeaveDuration = (outDate, inDate) => {
     const outTime = new Date(outDate);
     const inTime = new Date(inDate);
@@ -31,12 +73,12 @@ const Profile = () => {
   };
 
   return (
-    <View className="flex-1 bg-gray-200" style={{ paddingTop: StatusBar.currentHeight || 0, paddingBottom: 10 }}>
+    <View className="flex-1 bg-gray-100" style={{ paddingTop: StatusBar.currentHeight || 0, paddingBottom: 10 }}>
       <View className="flex items-center">
         <Text className="text-black text-3xl font-bold p-3">My Profile</Text>
       </View>
 
-      <ScrollView className="flex-1 bg-gray-200 p-4">
+      <ScrollView className="flex-1 bg-gray-100 p-4">
         {/* Basic Info Section */}
         <View className="bg-blue-300 shadow-md rounded-lg p-4 mb-4">
           <Text className="text-2xl font-semibold text-gray-800 mb-2">Basic Info</Text>
@@ -51,7 +93,23 @@ const Profile = () => {
         </View>
 
         {/* Requests Section */}
-        <Text className="text-2xl font-semibold text-gray-800 mb-4">Your Requests</Text>
+        <View className="mt-6 flex flex-row justify-between items-center mb-4">
+        <Text className="text-2xl font-semibold text-gray-800">Your Requests</Text>
+        {user && user.outTokens.length > 0 && (
+          downloadLoading ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : (
+            <TouchableOpacity
+              className="bg-green-500 rounded p-2"
+              onPress={handleDownload}
+              activeOpacity={0.7}
+            >
+              <Text className="text-white font-semibold">Download</Text>
+            </TouchableOpacity>
+          )
+        )}
+      </View>
+
         {user?.outTokens && user.outTokens.length > 0 ? (
           [...user.outTokens].reverse().map((token, index) => {
             const { days, hours, minutes } =
