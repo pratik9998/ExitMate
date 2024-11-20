@@ -62,8 +62,9 @@ app.post('/getuser',async(req,res)=>{
 app.post('/checklocation',async(req,res)=>{
    try{
     // 25.43202907987605, 81.77052767928059; --> CC3 location
-     const longitude = 81.77052767;
-     const latitude = 25.432029079;
+    //25.427244503512963, 81.7710662929568; --> Bh-1 
+     const longitude = 81.7710662;
+     const latitude = 25.427244503;
      const user_longitude = req.body.location.coords.longitude;
      const user_latitude = req.body.location.coords.latitude;
      const distance = geolib.getDistance(
@@ -201,9 +202,6 @@ app.post('/makecsv',async (req,res)=>{
     let user = await student.findOne({ username });
     if(!user)return res.send({success : false});
     let data = (await user.populate("outTokens")).outTokens;
-    if (data.length == 0) {
-      return res.send({ success: false, message: "no data found" });
-    }
     const transformedData = data
       .filter((entry) => entry.inDate && entry.outDate) // Filter out rows without inDate or outDate
       .map((entry) => {
@@ -219,6 +217,9 @@ app.post('/makecsv',async (req,res)=>{
           numberOfDays: numberOfDays.toFixed(2),
         };
       });
+      if (transformedData.length == 0) {
+        return res.send({ success: false, message: "no data found" });
+      }
     const worksheet = XLSX.utils.json_to_sheet(transformedData);
     const calculateColumnWidths = (data) => {
       return Object.keys(data[0]).map((key) => {
