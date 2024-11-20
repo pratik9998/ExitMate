@@ -57,7 +57,7 @@ const Home = () => {
       }
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location); 
-      router.replace({
+      router.push({
         pathname: '/Home Screen/camera',
         params: { requestType: reqType, location: JSON.stringify(location) },
       });
