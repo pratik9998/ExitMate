@@ -41,6 +41,7 @@ const ReviewPhotoScreen = () => {
           );
           user.inHostel = !user.inHostel;
           router.dismiss();
+          router.replace('/Home Screen/home');
         } else {
           Alert.alert('Request Error', response1.data.message || 'Invalid request');
         }
