@@ -3,19 +3,17 @@ import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } fro
 import { useRouter } from 'expo-router';
 import MY_URL from '../env';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/Feather'; // Importing Feather icons for eye icon
+import Icon from 'react-native-vector-icons/Feather';
 
 const SignUp = () => {
   const router = useRouter();
 
-  // State variables for storing username, password, and loading state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State for password visibility
-  const [loading, setLoading] = useState(false); // State for loading spinner
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Handle Sign Up
   const handleSignUp = async () => {
     try {
       if (password !== confirmPassword) {
@@ -23,22 +21,18 @@ const SignUp = () => {
         return;
       }
 
-      setLoading(true); // Start the loading spinner
-
-      // Sending a POST request to the backend sign-up API using axios
+      setLoading(true);
       const response = await axios.post(`${MY_URL}/signup`, {
         username,
         password,
         confirmPassword,
       });
       const result = response.data;
-
-      setLoading(false); // Stop the loading spinner once the response is received
+      setLoading(false);
 
       if (result.success) {
-        const correctotp = result.otp; // Retrieve the correct OTP from backend response
+        const correctotp = result.otp;
 
-        // Navigate to the OTP verification page and pass the OTP as a parameter
         router.push({
           pathname: './verifysignupotp',
           params: {
@@ -53,7 +47,7 @@ const SignUp = () => {
         Alert.alert('Sign Up Failed', result.message || 'Could not create account');
       }
     } catch (error) {
-      setLoading(false); // Stop the loading spinner if there's an error
+      setLoading(false);
       console.log('Sign Up Error:', error);
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
@@ -69,7 +63,7 @@ const SignUp = () => {
         <TextInput
           placeholder="Username"
           value={username}
-          onChangeText={setUsername} // Update username state as user types
+          onChangeText={setUsername}
           className="w-full p-3 mb-4 border-2 border-gray-300 rounded-lg"
         />
 
@@ -77,15 +71,15 @@ const SignUp = () => {
         <View className="w-full flex-row items-center border-2 border-gray-300 rounded-lg mb-6">
           <TextInput
             placeholder="Password"
-            secureTextEntry={!showPassword} // Toggle visibility based on showPassword state
+            secureTextEntry={!showPassword} 
             value={password}
-            onChangeText={setPassword} // Update password state as user types
+            onChangeText={setPassword}
             className="flex-1 p-3"
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="pr-4">
             {/* Wrapping Icon inside Text to avoid the error */}
             <Text>
-              <Icon name={showPassword ? 'eye' : 'eye-off'} size={24} color="gray" /> {/* Toggle between eye and eye-off icons */}
+              <Icon name={showPassword ? 'eye' : 'eye-off'} size={24} color="gray" />
             </Text>
           </TouchableOpacity>
         </View>
@@ -95,7 +89,7 @@ const SignUp = () => {
           placeholder="Confirm Password"
           secureTextEntry
           value={confirmPassword}
-          onChangeText={setconfirmPassword} // Update username state as user types
+          onChangeText={setconfirmPassword}
           className="w-full p-3 mb-6 border-2 border-gray-300 rounded-lg"
         />
 
@@ -103,10 +97,10 @@ const SignUp = () => {
         <TouchableOpacity
           className="bg-green-600 py-3 px-10 rounded-full mb-4"
           onPress={handleSignUp}
-          disabled={loading} // Disable button while loading
+          disabled={loading}
         >
           {loading ? (
-            <ActivityIndicator size="small" color="#ffffff" /> // Show spinner when loading
+            <ActivityIndicator size="small" color="#ffffff" />
           ) : (
             <Text className="text-white text-lg text-center font-semibold">Sign Up</Text>
           )}
@@ -117,7 +111,7 @@ const SignUp = () => {
           Already have an account?{' '}
           <Text
             className="text-blue-600 font-bold"
-            onPress={() => router.back()}  // Pop signup and go back to the previous login page
+            onPress={() => router.back()} 
           >
             Sign In
           </Text>

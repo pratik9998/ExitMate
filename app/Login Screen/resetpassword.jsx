@@ -22,47 +22,43 @@ const ResetPasswordScreen = () => {
     }
 
     try {
-      setLoading(true); // Start loading spinner
+      setLoading(true);
 
-      // Sending the reset password request with userEmail in the body
       const response2 = await axios.post(`${MY_URL}/checkuserexists`, {
-        username, // Send as JSON in the request body
+        username,
       });
 
       if(response2.data.exists){
 
-        // Create the email address based on the username
-        const cleanedUsername = username.trim().toLowerCase(); // Clean up the username
-        const userEmail = `${cleanedUsername}@iiita.ac.in`; // Construct the email address
+        const cleanedUsername = username.trim().toLowerCase();
+        const userEmail = `${cleanedUsername}@iiita.ac.in`;
 
-        // Sending the reset password request with userEmail in the body
         const response = await axios.post(`${MY_URL}/sendmail`, {
-          userEmail, // Send as JSON in the request body
+          userEmail,
         });
 
         const result = response.data;
-        setLoading(false); // Stop loading spinner
+        setLoading(false);
 
         if (result.success) {
           Alert.alert('Success', 'An OTP has been sent to your email');
-          // Navigate to the Verify OTP Screen with username, new password, and correct OTP
           router.push({
             pathname: './verifyresetpasswordotp',
             params: {
               username,
               newPassword,
-              correctOtp: result.otp, // Pass the OTP received from the server
+              correctOtp: result.otp,
             },
           });
         } else {
           Alert.alert('Error', 'Failed to send OTP. Please try again.');
         }
       } else {
-        setLoading(false); // Stop loading spinner
+        setLoading(false);
         Alert.alert('Error', 'User does not exist. Please check your username.');
       }
     } catch (error) {
-      setLoading(false); // Stop loading spinner in case of error
+      setLoading(false);
       console.log('OTP Request Error:', error);
       Alert.alert('Error', 'Something went wrong. Please try again.');
     }
@@ -102,7 +98,6 @@ const ResetPasswordScreen = () => {
           placeholder="Confirm New Password"
           value={confirmNewPassword}
           onChangeText={setConfirmNewPassword}
-          // secureTextEntry={!showPassword}
           className="p-3 mb-4 border-2 border-gray-300 rounded-lg"
         />
 
@@ -110,11 +105,11 @@ const ResetPasswordScreen = () => {
         <TouchableOpacity
           onPress={handleResetPassword}
           className="px-10 py-3 mb-1 bg-blue-600 rounded-full"
-          disabled={loading} // Disable button while loading
+          disabled={loading}
         >
           <View className="flex items-center justify-center">
             {loading ? (
-              <ActivityIndicator size="small" color="#ffffff" /> // Show loading spinner when processing
+              <ActivityIndicator size="small" color="#ffffff" />
             ) : (
               <Text className="text-lg font-semibold text-white">Reset My Password</Text>
             )}

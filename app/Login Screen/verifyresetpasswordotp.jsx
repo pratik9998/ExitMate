@@ -10,12 +10,10 @@ const VerifyResetPasswordOtp = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Function to handle OTP verification and password change
   const handleVerifyOtp = async () => {
     if (otp === correctOtp) {
       setLoading(true);
       try {
-        // Sending request to change the password using username and newPassword
         const response = await axios.post(`${MY_URL}/changepassword`, {
           username, newPassword,
         });
@@ -23,7 +21,7 @@ const VerifyResetPasswordOtp = () => {
         const result = response.data;
         if (result.success){
           Alert.alert('Success', 'Password changed successfully.');
-          router.replace('./login'); // Navigate to login screen after successful password change
+          router.replace('./login');
         } else {
           Alert.alert('Error', 'Failed to change password.');
         }

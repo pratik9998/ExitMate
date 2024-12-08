@@ -37,27 +37,6 @@ const CameraScreen = () => {
 
   const takePhoto = async () => {
     if (cameraRef.current) {
-      // const quality = facing === 'back' ? 0.05 : 0.1;
-      // const photo = await cameraRef.current.takePictureAsync({ base64: true, quality });
-      // const photoBase64 = photo.base64;
-
-      // // console.log('1.parsed Location : ', parsedLocation);
-      // // console.log('2.captured photo in camera : ', photo.base64);
-
-      // const manipulatedPhoto = await ImageManipulator.manipulateAsync(
-      //   photo.uri,
-      //   [{ resize: { width: 800 } }], // Resize to a maximum width of 800px
-      //   { compress: quality, format: ImageManipulator.SaveFormat.JPEG }
-      // );
-
-      // const compressedBase64 = manipulatedPhoto.base64;
-      
-      // console.log(compressedBase64);
-      
-      // router.replace({
-      //   pathname: '/Home Screen/reviewphotoscreen',
-      //   params: {reqtype : requestType, plocation : location, photobase64 : compressedBase64}
-      // });
       
       const photo = await cameraRef.current.takePictureAsync();
       const quality = facing === 'back' ? 0.2 : 0.3;
@@ -101,35 +80,5 @@ const CameraScreen = () => {
   </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//   },
-//   message: {
-//     textAlign: 'center',
-//     paddingBottom: 10,
-//   },
-//   camera: {
-//     flex: 1,
-//   },
-//   buttonContainer: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     backgroundColor: 'transparent',
-//     margin: 64,
-//   },
-//   button: {
-//     flex: 1,
-//     alignSelf: 'flex-end',
-//     alignItems: 'center',
-//   },
-//   text: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     color: 'white',
-//   },
-// });
 
 export default CameraScreen;

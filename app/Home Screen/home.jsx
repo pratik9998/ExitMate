@@ -14,7 +14,7 @@ const Home = () => {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const router = useRouter();
 
-  const {user,setUser} = useUser(); //from user context
+  const {user,setUser} = useUser();
   // console.log('home screen user : ' , user);//now ok 
 
   const handleLogout = () => {
@@ -77,7 +77,7 @@ const Home = () => {
         {user.inHostel ? <TouchableOpacity onPress={handleLeaveRequest} disabled={loadingButton === 'leave'}>
           <View className="bg-blue-600 py-3 px-10 rounded-full mb-4 w-62">
             {loadingButton === 'leave' ? (
-              <ActivityIndicator size="small" color="#ffffff" /> // Show loading spinner for leave button
+              <ActivityIndicator size="small" color="#ffffff" />
             ) : (
               <Text className="text-white text-lg font-semibold text-center">Leave Request</Text>
             )}
@@ -89,7 +89,7 @@ const Home = () => {
         {(!user.inHostel) ? <TouchableOpacity onPress={handleArrivingRequest} disabled={loadingButton === 'arriving'}>
           <View className="bg-blue-600 py-3 px-10 rounded-full mb-4 w-62">
             {loadingButton === 'arriving' ? (
-              <ActivityIndicator size="small" color="#ffffff" /> // Show loading spinner for arriving button
+              <ActivityIndicator size="small" color="#ffffff" />
             ) : (
               <Text className="text-white text-lg font-semibold text-center">Arriving Request</Text>
             )}

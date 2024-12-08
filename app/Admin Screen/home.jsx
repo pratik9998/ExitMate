@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useUser } from '../UserContext';
 import MY_URL from '../env';
-import { Buffer } from 'buffer'; // Import buffer for base64 conversion
+import { Buffer } from 'buffer';
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
@@ -41,15 +41,11 @@ const AdminHome = () => {
            "base64"
          );
 
-         // Define the file path in the device's document directory
          const fileUri = `${FileSystem.documentDirectory}${rollNumber}.xlsx`;
-
-         // Write the base64 data to a file
          await FileSystem.writeAsStringAsync(fileUri, base64Data, {
            encoding: FileSystem.EncodingType.Base64,
          });
 
-         // Share the file using Expo's Sharing API
          if (await Sharing.isAvailableAsync()) {
            await Sharing.shareAsync(fileUri);
           //  alert("File shared successfully!");
@@ -112,7 +108,7 @@ const AdminHome = () => {
             <TouchableOpacity
               className="bg-blue-500 rounded p-2"
               onPress={handleGetDetails}
-              activeOpacity={0.7} // Adjust opacity when pressed
+              activeOpacity={0.7}
             >
               <Text className="text-white font-semibold">Get Details</Text>
             </TouchableOpacity>

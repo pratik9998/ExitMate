@@ -1,7 +1,7 @@
 import { Text, View, ScrollView, StatusBar,ActivityIndicator,TouchableOpacity } from 'react-native';
 import React,{useState} from 'react';
 import { useUser } from '../UserContext';
-import { Buffer } from 'buffer'; // Import buffer for base64 conversion
+import { Buffer } from 'buffer';
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import MY_URL from '../env';
@@ -36,15 +36,11 @@ const Profile = () => {
            "base64"
          );
 
-         // Define the file path in the device's document directory
          const fileUri = `${FileSystem.documentDirectory}${user.username}.xlsx`;
-
-         // Write the base64 data to a file
          await FileSystem.writeAsStringAsync(fileUri, base64Data, {
            encoding: FileSystem.EncodingType.Base64,
          });
 
-         // Share the file using Expo's Sharing API
          if (await Sharing.isAvailableAsync()) {
            await Sharing.shareAsync(fileUri);
           //  alert("File shared successfully!");

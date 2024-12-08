@@ -53,10 +53,10 @@ const VerifySignUpOtp = () => {
         <TextInput
           placeholder="Enter 6-digit OTP"
           value={otp}
-          onChangeText={setOtp} // Update OTP state
+          onChangeText={setOtp}
           keyboardType="numeric"
           className="border-2 border-gray-300 rounded-lg p-3 mb-6 w-full text-center"
-          maxLength={6} // Set max length for OTP
+          maxLength={6}
         />
 
         {/* Verify Button */}

@@ -52,7 +52,7 @@ const Login = () => {
         <TextInput
           placeholder="Username"
           value={username}
-          onChangeText={setUsername} // Update username state as user types
+          onChangeText={setUsername}
           className="w-full p-3 mb-4 border-2 border-gray-300 rounded-lg"
         />
 
@@ -60,15 +60,14 @@ const Login = () => {
         <View className="w-full flex-row items-center border border-gray-300 rounded-lg mb-6">
           <TextInput
             placeholder="Password"
-            secureTextEntry={!showPassword} // Toggle visibility based on showPassword state
+            secureTextEntry={!showPassword}
             value={password}
-            onChangeText={setPassword} // Update password state as user types
+            onChangeText={setPassword}
             className="flex-1 p-3"
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)} className="pr-4">
-            {/* Wrapping Icon inside Text to avoid the error */}
             <Text>
-              <Icon name={showPassword ? 'eye' : 'eye-off'} size={24} color="gray" /> {/* Toggle between eye and eye-off icons */}
+              <Icon name={showPassword ? 'eye' : 'eye-off'} size={24} color="gray" />
             </Text>
           </TouchableOpacity>
         </View>
@@ -89,7 +88,7 @@ const Login = () => {
         <Text className="text-gray-700 py-3 text-center">
           <Text
             className="text-blue-600 font-bold"
-            onPress={() => router.push('/Login Screen/resetpassword')} // Push sign-up onto the stack
+            onPress={() => router.push('/Login Screen/resetpassword')}
           >
             Forgot Password?
           </Text>
@@ -101,7 +100,7 @@ const Login = () => {
             New here?{' '}
             <Text
               className="text-blue-600 font-bold"
-              onPress={() => router.push('/Login Screen/signup')} // Push sign-up onto the stack
+              onPress={() => router.push('/Login Screen/signup')}
             >
               Sign Up
             </Text>
