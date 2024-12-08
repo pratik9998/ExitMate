@@ -1,3 +1,57 @@
+# Setup Instructions
+
+1. **Download the folder**  
+   Download the `ExitMate` folder.
+
+2. **Create a `.env` file in the `backend` folder**  
+   Add the following environment variables to the `.env` file:
+   ```env
+   MONGO_URI=<YOUR URI>
+   JWT_SECRET="<YOUR SECRET KEY>"
+   CLIENT_ID=""
+   CLIENT_SECRET=""
+   REDIRECT_URI=""
+   REFRESH_TOKEN=""
+   BASE_URL="http://<your ip>:<your port>/"
+   
+3. **Create an `env.js` file in the `app` folder**
+   Add the following code to the `env.js` file:
+   ```env
+   const MY_URL = "http://<your ip>:<your port>";
+   export default MY_URL;
+   
+4. **Install dependencies**
+Run the following commands in their respective directories:
+
+   In the `ExitMate` folder:
+      ```bash
+      npm install
+      ```
+   
+   In the `backend` folder:
+      ```bash
+      npm install
+      ```
+
+5. **Start the frontend**
+In one terminal, navigate to the `ExitMate` folder and run:
+
+   ```bash
+   npx expo start
+   ```
+
+6. **Start the backend**
+In another terminal, navigate to the backend folder and run:
+
+   ```bash
+   npx nodemon app
+   ```
+
+   Alternatively, you can run:
+      ```bash
+      nodemon app
+      ```
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
